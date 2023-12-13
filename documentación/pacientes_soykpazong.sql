@@ -44,6 +44,13 @@ CREATE TABLE IF NOT EXISTS condicion_paciente(
     FOREIGN KEY(carne_paciente) REFERENCES paciente(carne) ON UPDATE CASCADE,
     FOREIGN KEY(nombre_condicion) REFERENCES condicion(nombre) ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS reporte(
+    id INT NOT NULL AUTO_INCREMENT,
+    carne_paciente VARCHAR(15) NOT NULL,
+    reporte VARCHAR(250) NOT NULL,
+    PRIMARY KEY(id)
+);
 INSERT INTO condicion(nombre) VALUES("Autismo");
 INSERT INTO condicion(nombre) VALUES("Síndrome de Down");
 INSERT INTO condicion(nombre) VALUES("Retraso evolutivo");
