@@ -25,8 +25,9 @@ public class Paciente {
     private String dpiEncargado;
     private String tipoPrograma;
     private String dpiTerapista;
-    private String rutaDocumento;
+    private String tipoArchivo;
     private int edad;
     private String enfermedadCronica;
     private String terapia;
+    private byte[] fileBytes;
 }

@@ -22,6 +22,7 @@ public class ControlDatos {
     private FechaDB fechaDB;
     private CondicionPacienteDB condicionPacienteDB;
     private PacienteInfoDB pacienteInfoDB;
+    private ReporteDB reporteDB;
 
     public ControlDatos() {
         this.condicionDB = new CondicionDB();
@@ -31,6 +32,7 @@ public class ControlDatos {
         this.fechaDB = new FechaDB();
         this.condicionPacienteDB = new CondicionPacienteDB();
         this.pacienteInfoDB = new PacienteInfoDB();
+        this.reporteDB = new ReporteDB();
     }
 
     public String[] getCondiciones() {

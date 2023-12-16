@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class PacienteInfo {
+
     String carne;
     String nombre;
     String fecha;

@@ -6,6 +6,9 @@ package com.pacientessoykpaz.backend.database.model;
 
 import com.pacientessoykpaz.backend.database.coneccion.ConeccionDB;
 import com.pacientessoykpaz.backend.entidad.Encargado;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,8 +23,24 @@ public class EncargadoDB {
 
     private static final String SELECT_ENCARGADO = "SELECT * FROM encargado WHERE dpi = ?";
     private static final String INSERT = """
-                                         INSERT INTO encargado(dpi,nombre,telefono,direccion,condicion_economica,ruta_documento) 
-                                         VALUES(?,?,?,?,?,?)
+                                         INSERT INTO encargado(
+                                         dpi,
+                                         nombre,
+                                         telefono,
+                                         direccion,
+                                         condicion_economica,
+                                         tipo_archivo,
+                                         archivo) 
+                                         VALUES(?,?,?,?,?,?,?)
+                                         """;
+    private static final String INSERT_WITHOUT_FILE = """
+                                         INSERT INTO encargado(
+                                         dpi,
+                                         nombre,
+                                         telefono,
+                                         direccion,
+                                         condicion_economica)
+                                         VALUES(?,?,?,?,?)
                                          """;
     private ResultSet resultSet;
     private PreparedStatement statement;
@@ -32,7 +51,7 @@ public class EncargadoDB {
      * @param encargado
      * @return
      */
-    public boolean insert(Encargado encargado) {
+    public boolean insertWithFile(Encargado encargado) {
         try {
             statement = ConeccionDB.getConeccion().prepareStatement(INSERT);
             statement.setString(1, encargado.getDpi());
@@ -40,7 +59,34 @@ public class EncargadoDB {
             statement.setString(3, encargado.getTelefono());
             statement.setString(4, encargado.getDireccion());
             statement.setString(5, encargado.getCondicionEconomica());
-            statement.setString(6, encargado.getRutaDocumento());
+            statement.setString(6, encargado.getTipoDocumento());
+
+            InputStream in = new ByteArrayInputStream(encargado.getFileBytes());
+            statement.setBlob(7, in);
+
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(EncargadoDB.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    /**
+     * Ingresa los datos del encargado en la base de datos
+     *
+     * @param encargado
+     * @return
+     */
+    public boolean insertWithoutFile(Encargado encargado) {
+        try {
+            statement = ConeccionDB.getConeccion().prepareStatement(INSERT_WITHOUT_FILE);
+            statement.setString(1, encargado.getDpi());
+            statement.setString(2, encargado.getNombre());
+            statement.setString(3, encargado.getTelefono());
+            statement.setString(4, encargado.getDireccion());
+            statement.setString(5, encargado.getCondicionEconomica());
+
             statement.executeUpdate();
             return true;
         } catch (SQLException ex) {
@@ -56,18 +102,24 @@ public class EncargadoDB {
      * @return
      */
     public Encargado getEncargado(String dpi) {
+        Encargado e = null;
         try {
-            Encargado e = new Encargado();
             statement = ConeccionDB.getConeccion().prepareStatement(SELECT_ENCARGADO);
             statement.setString(1, dpi);
             resultSet = statement.executeQuery();
+            e = new Encargado();
             while (resultSet.next()) {
                 e.setDpi(dpi);
                 e.setCondicionEconomica(resultSet.getString("condicion_economica"));
                 e.setDireccion(resultSet.getString("direccion"));
                 e.setTelefono(resultSet.getString("telefono"));
                 e.setNombre(resultSet.getString("nombre"));
-                e.setRutaDocumento(resultSet.getString("ruta_documento"));
+                e.setTipoDocumento(resultSet.getString("tipo_archivo"));
+                Blob blob = resultSet.getBlob("archivo");
+                if (blob != null) {
+                    byte[] aray = blob.getBytes(1, (int) blob.length());
+                    e.setFileBytes(aray);
+                }
             }
             resultSet.close();
             statement.close();
@@ -76,6 +128,5 @@ public class EncargadoDB {
             Logger.getLogger(EncargadoDB.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-
     }
 }

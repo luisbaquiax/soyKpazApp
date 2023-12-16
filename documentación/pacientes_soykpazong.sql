@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS encargado(
     telefono VARCHAR(8) NOT NULL,
     direccion VARCHAR(100) NOT NULL,
     condicion_economica VARCHAR(50) NOT NULL,
-    ruta_documento VARCHAR(100),
+    tipo_archivo VARCHAR(10),
+    archivo BLOB,
     PRIMARY KEY(dpi)
 );
 
@@ -30,8 +31,9 @@ CREATE TABLE IF NOT EXISTS paciente(
     tipo_programa VARCHAR(20) NOT NULL,
     enfermedad_cronica VARCHAR(100) NOT NULL,
     dpi_terapista VARCHAR(15) NOT NULL,
-    ruta_documento VARCHAR(100),
     terapia VARCHAR(100),
+    tipo_archivo VARCHAR(10),
+    archivo BLOB,
     PRIMARY KEY(carne),
     FOREIGN KEY(dpi_encargado) REFERENCES encargado(dpi),
     FOREIGN KEY(dpi_terapista) REFERENCES terapista(dpi)
@@ -43,6 +45,14 @@ CREATE TABLE IF NOT EXISTS condicion_paciente(
     PRIMARY KEY(carne_paciente, nombre_condicion),
     FOREIGN KEY(carne_paciente) REFERENCES paciente(carne) ON UPDATE CASCADE,
     FOREIGN KEY(nombre_condicion) REFERENCES condicion(nombre) ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS reporte(
+    id INT NOT NULL AUTO_INCREMENT,
+    fecha DATE NOT NULL,
+    carne_paciente VARCHAR(15) NOT NULL,
+    reporte VARCHAR(250) NOT NULL,
+    PRIMARY KEY(id)
 );
 INSERT INTO condicion(nombre) VALUES("Autismo");
 INSERT INTO condicion(nombre) VALUES("Síndrome de Down");
