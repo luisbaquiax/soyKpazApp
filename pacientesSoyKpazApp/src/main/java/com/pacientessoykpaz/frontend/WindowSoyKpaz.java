@@ -751,13 +751,13 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelVerReporte, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(labelSearchbycarne, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(txtSearchByEncargado)
                         .addComponent(txtSearchCarne, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(labelAddReport, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(labelVerInformación, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(labelVerReporte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(labelVerInformación, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addComponent(labelSearchporDpi, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -1809,7 +1809,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
 
         int fila = tablePacientes.getSelectedRow();
         if (fila > 0) {
-            WinReport winReport = new WinReport(controlDatos, listPacientes.get(fila),this);
+            WinReport winReport = new WinReport(controlDatos, listPacientes.get(fila), this);
             winReport.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null,
@@ -1821,7 +1821,6 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     }//GEN-LAST:event_labelAddReportMouseClicked
 
     private void labelVerReporteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelVerReporteMouseClicked
-        jTabbedPane1.setSelectedIndex(4);
         llenarAreaReporte();
     }//GEN-LAST:event_labelVerReporteMouseClicked
 
@@ -2152,6 +2151,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                 r += list.get(i).getContenido();
                 r += "\n\n";
             }
+            jTabbedPane1.setSelectedIndex(4);
         }
         txtArea.setText(r);
     }
