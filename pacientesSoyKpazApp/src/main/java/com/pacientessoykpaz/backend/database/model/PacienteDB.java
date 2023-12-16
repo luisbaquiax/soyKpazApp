@@ -6,6 +6,9 @@ package com.pacientessoykpaz.backend.database.model;
 
 import com.pacientessoykpaz.backend.database.coneccion.ConeccionDB;
 import com.pacientessoykpaz.backend.entidad.Paciente;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,8 +25,33 @@ public class PacienteDB {
 
     private static final String INSERT
             = """
-              insert into paciente(carne,nombre,fecha_nacimiento,edad,dpi_encargado,tipo_programa,enfermedad_cronica,dpi_terapista,ruta_documento,terapia) 
-              values(?,?,?,?,?,?,?,?,?,?)
+              insert into paciente(
+                carne,
+                nombre,
+                fecha_nacimiento,
+                edad,
+                dpi_encargado,
+                tipo_programa,
+                enfermedad_cronica,
+                dpi_terapista,
+                tipo_archivo,
+                terapia,
+                archivo) 
+              values(?,?,?,?,?,?,?,?,?,?,?)
+              """;
+    private static final String INSERT_WHITOUT_FILE
+            = """
+              insert into paciente(
+                carne,
+                nombre,
+                fecha_nacimiento,
+                edad,
+                dpi_encargado,
+                tipo_programa,
+                enfermedad_cronica,
+                dpi_terapista,
+                terapia) 
+              values(?,?,?,?,?,?,?,?,?)
               """;
     private static final String SELECT = "SELECT * FROM paciente";
 
@@ -35,7 +63,7 @@ public class PacienteDB {
      * @param paciente
      * @return
      */
-    public boolean insert(Paciente paciente) {
+    public boolean insertWithFile(Paciente paciente) {
         try {
             statement = ConeccionDB.getConeccion().prepareStatement(INSERT);
             statement.setString(1, paciente.getCarne());
@@ -46,8 +74,38 @@ public class PacienteDB {
             statement.setString(6, paciente.getTipoPrograma());
             statement.setString(7, paciente.getEnfermedadCronica());
             statement.setString(8, paciente.getDpiTerapista());
-            statement.setString(9, paciente.getRutaDocumento());
+            statement.setString(9, paciente.getTipoArchivo());
             statement.setString(10, paciente.getTerapia());
+
+            InputStream in = new ByteArrayInputStream(paciente.getFileBytes());
+            statement.setBlob(11, in);
+
+            statement.executeUpdate();
+            statement.close();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(PacienteDB.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    /**
+     *
+     * @param paciente
+     * @return
+     */
+    public boolean insertWithoutFile(Paciente paciente) {
+        try {
+            statement = ConeccionDB.getConeccion().prepareStatement(INSERT_WHITOUT_FILE);
+            statement.setString(1, paciente.getCarne());
+            statement.setString(2, paciente.getNombre());
+            statement.setString(3, paciente.getFechaNacimiento());
+            statement.setInt(4, paciente.getEdad());
+            statement.setString(5, paciente.getDpiEncargado());
+            statement.setString(6, paciente.getTipoPrograma());
+            statement.setString(7, paciente.getEnfermedadCronica());
+            statement.setString(8, paciente.getDpiTerapista());
+            statement.setString(9, paciente.getTerapia());
             statement.executeUpdate();
             statement.close();
             return true;
@@ -79,6 +137,9 @@ public class PacienteDB {
     }
 
     private Paciente get(ResultSet resultSet) throws SQLException {
+
+        Blob blob = resultSet.getBlob("archivo");
+        byte[] byteArray = blob.getBytes(1, (int) blob.length());
         return Paciente.builder().
                 carne(resutSet.getString("carne")).
                 nombre(resutSet.getString("nombre")).
@@ -88,8 +149,9 @@ public class PacienteDB {
                 tipoPrograma(resutSet.getString("tipo_programa")).
                 enfermedadCronica(resutSet.getString("enfermedad_cronica")).
                 dpiTerapista(resutSet.getString("dpi_terapista")).
-                rutaDocumento(resutSet.getString("ruta_documento")).
+                tipoArchivo(resutSet.getString("tipo_documento")).
                 terapia(resultSet.getString("terapia")).
+                fileBytes(byteArray).
                 build();
     }
 }

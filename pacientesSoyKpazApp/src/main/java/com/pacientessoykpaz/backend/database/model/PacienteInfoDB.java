@@ -6,6 +6,7 @@ package com.pacientessoykpaz.backend.database.model;
 
 import com.pacientessoykpaz.backend.database.coneccion.ConeccionDB;
 import com.pacientessoykpaz.backend.entidad.PacienteInfo;
+import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,8 +23,8 @@ public class PacienteInfoDB {
 
     private static final String SELECT
             = """
-             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia, 
-              t.nombre AS terapista, e.nombre AS encargado, e.telefono
+             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia,
+             t.nombre AS terapista, e.nombre AS encargado, e.telefono
              FROM paciente p
              INNER JOIN terapista t
              ON t.dpi = p.dpi_terapista
@@ -33,8 +34,8 @@ public class PacienteInfoDB {
               """;
     private static final String SELECT_BY_ENCARGADO
             = """
-             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia, 
-              t.nombre AS terapista, e.nombre AS encargado, e.telefono
+             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia,
+             t.nombre AS terapista, e.nombre AS encargado, e.telefono
              FROM paciente p
              INNER JOIN terapista t
              ON t.dpi = p.dpi_terapista
@@ -46,8 +47,8 @@ public class PacienteInfoDB {
 
     private static final String SELECT_BY_CARNE
             = """
-             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia, 
-              t.nombre AS terapista, e.nombre AS encargado, e.telefono
+             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia,
+             t.nombre AS terapista, e.nombre AS encargado, e.telefono
              FROM paciente p
              INNER JOIN terapista t
              ON t.dpi = p.dpi_terapista

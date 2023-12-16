@@ -10,20 +10,31 @@ import com.pacientessoykpaz.backend.entidad.CondicionPaciente;
 import com.pacientessoykpaz.backend.entidad.Encargado;
 import com.pacientessoykpaz.backend.entidad.Paciente;
 import com.pacientessoykpaz.backend.entidad.PacienteInfo;
+import com.pacientessoykpaz.backend.entidad.Reporte;
 import com.pacientessoykpaz.backend.entidad.Terapista;
+import com.pacientessoykpaz.util.ManejoRutas;
 import com.pacientessoykpaz.util.Utiles;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -39,6 +50,10 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private ButtonGroup group2;
     private List<PacienteInfo> listPacientes;
     private DefaultTableModel dfModel;
+    private ManejoRutas rutas;
+    private String rutadpiEncargado;
+    private String rutadpiPaciente;
+    public static final int TAM = 20;
 
     /**
      * Creates new form WindowSoyKpaz
@@ -53,6 +68,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
 
         this.utiles = new Utiles();
         this.controlDatos = new ControlDatos();
+        this.rutas = new ManejoRutas();
 
         group1 = new ButtonGroup();
         group1.add(radio100);
@@ -64,19 +80,27 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         group2.add(radioIngresos2);
         group2.add(radioIngresos3);
 
+        this.encargadoAuxi = null;
+
         this.listPacientes = new ArrayList<>();
         this.listPacientes = this.controlDatos.getPacienteInfoDB().getPacientes();
         /**
          * Establecer iconos
          */
         utiles.ponerIconoLabel(label1, "/img/soykapaz.jpeg");
-        utiles.setIconLabel(labelSearchporDpi, "/img/search.png", 20);
-        utiles.setIconLabel(labelSearchbycarne, "/img/search.png", 20);
-        utiles.setIconLabel(labelVerInformación, "/img/edit.png", 20);
-        utiles.setIconLabel(labelAddReport, "/img/add.png", 20);
+        utiles.setIconLabel(labelSearchporDpi, "/img/search.png", TAM);
+        utiles.setIconLabel(labelSearchbycarne, "/img/search.png", TAM);
+        utiles.setIconLabel(labelVerInformación, "/img/edit.png", TAM);
+        utiles.setIconLabel(labelAddReport, "/img/add.png", TAM);
+        utiles.setIconLabel(labelVerReporte, "/img/report.png", TAM);
+        utiles.ponerIconoButton(btnSearchReportFecha, "/img/search.png", TAM);
+        utiles.ponerIconoButton(btnPDF, "/img/pdf.png", TAM);
 
         llenarCondiciones(listCondiciones);
         llenarComboTerapista(comboTerapistas);
+        //otras variables
+        this.rutadpiEncargado = "";
+        this.rutadpiPaciente = "";
         /**
          * Llenar tablas
          */
@@ -84,6 +108,14 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         llenarTablaTerapistas(this.controlDatos.getTerapistaDB().getTerapistas());
         //establecer el icon de la app cuando se está usando
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/ong.png")));
+        try {
+            //parace que se parezca a windows
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(WindowSoyKpaz.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(WindowSoyKpaz.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -112,6 +144,8 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         radio100 = new javax.swing.JRadioButton();
         radio50 = new javax.swing.JRadioButton();
         radioNoBecado = new javax.swing.JRadioButton();
+        labelSelectFilePaciente = new javax.swing.JLabel();
+        txtrutadpibeneficiario = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -133,6 +167,8 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         radioIngresos1 = new javax.swing.JRadioButton();
         radioIngresos2 = new javax.swing.JRadioButton();
         radioIngresos3 = new javax.swing.JRadioButton();
+        labelSelectFileEncargado = new javax.swing.JLabel();
+        txtRutadpiPadre = new javax.swing.JTextField();
         jPanel7 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
@@ -151,6 +187,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         labelAddReport = new javax.swing.JLabel();
         labelSearchbycarne = new javax.swing.JLabel();
         txtSearchCarne = new javax.swing.JTextField();
+        labelVerReporte = new javax.swing.JLabel();
         jPanel14 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tableTerapistas = new javax.swing.JTable();
@@ -201,6 +238,16 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         jLabel33 = new javax.swing.JLabel();
         txtTerapistaInfo = new javax.swing.JTextField();
         txtTerapiaInfo = new javax.swing.JTextField();
+        jPanel9 = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        txtArea = new javax.swing.JTextArea();
+        jPanel10 = new javax.swing.JPanel();
+        jLabel34 = new javax.swing.JLabel();
+        dateChooser2 = new com.toedter.calendar.JDateChooser();
+        labelSelectFilePaciente1 = new javax.swing.JLabel();
+        dateChooser3 = new com.toedter.calendar.JDateChooser();
+        btnSearchReportFecha = new javax.swing.JButton();
+        btnPDF = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         label1 = new javax.swing.JLabel();
         panelNuevoPaciente = new javax.swing.JPanel();
@@ -268,6 +315,15 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
             }
         });
 
+        labelSelectFilePaciente.setText("Seleccionar archivo:");
+        labelSelectFilePaciente.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelSelectFilePacienteMouseClicked(evt);
+            }
+        });
+
+        txtrutadpibeneficiario.setBorder(javax.swing.BorderFactory.createTitledBorder("Archivo seleccionado"));
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -275,29 +331,34 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(radio100)
+                .addGap(18, 18, 18)
+                .addComponent(radio50, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(radioNoBecado, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 627, Short.MAX_VALUE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtName)
-                            .addComponent(txtCarne))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(28, 28, 28)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtAge)
-                            .addComponent(dateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(radio100)
-                        .addGap(18, 18, 18)
-                        .addComponent(radio50, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(radioNoBecado, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(txtCarne, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(txtName))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(labelSelectFilePaciente, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                    .addComponent(txtrutadpibeneficiario))
+                .addGap(12, 12, 12)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(28, 28, 28)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtAge)
+                    .addComponent(dateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -305,11 +366,15 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(txtCarne, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCarne, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelSelectFilePaciente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtrutadpibeneficiario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(txtAge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -318,19 +383,12 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel15)
                         .addComponent(radio100)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(11, 11, 11)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(dateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(jLabel8))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtAge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -427,71 +485,83 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
 
         radioIngresos3.setText("No tiene ingresos fijos");
 
+        labelSelectFileEncargado.setText("Seleccionar archivo:");
+        labelSelectFileEncargado.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelSelectFileEncargadoMouseClicked(evt);
+            }
+        });
+
+        txtRutadpiPadre.setBorder(javax.swing.BorderFactory.createTitledBorder("Archivo seleccionado"));
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel14)
-                        .addGap(18, 18, 18)
-                        .addComponent(radioIngresos1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(radioIngresos2)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jLabel14)
+                .addGap(18, 18, 18)
+                .addComponent(radioIngresos1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(radioIngresos2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addComponent(radioIngresos3)
+                .addGap(0, 365, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtNameEncargado))
+                        .addComponent(txtNameEncargado, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtDpiEncargado)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelSelectFileEncargado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtRutadpiPadre))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtTelefono))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(radioIngresos3)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel11)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtTelefono))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(8, 8, 8))))
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(8, 8, 8))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel11)
+                        .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4)
+                        .addComponent(txtDpiEncargado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(labelSelectFileEncargado)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel10)
                         .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(txtDpiEncargado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel11)
-                                .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9)
-                            .addComponent(txtNameEncargado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(18, 18, 18)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel9)
+                        .addComponent(txtNameEncargado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtRutadpiPadre, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(20, 20, 20)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel14)
                         .addComponent(radioIngresos1))
                     .addComponent(radioIngresos3)
                     .addComponent(radioIngresos2))
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
@@ -593,10 +663,10 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                 .addComponent(btnSaveData, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnClear)
-                .addGap(0, 80, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("tab1", jPanel6);
+        jTabbedPane1.addTab("1", jPanel6);
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -633,6 +703,11 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         labelSearchporDpi.setText("Buscar por encargado (DPI):");
 
         labelAddReport.setText("Agregar reporte");
+        labelAddReport.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelAddReportMouseClicked(evt);
+            }
+        });
 
         labelSearchbycarne.setText("Buscar por carné:");
 
@@ -642,11 +717,18 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
             }
         });
 
+        labelVerReporte.setText("Ver reporte");
+        labelVerReporte.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelVerReporteMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1072, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1090, Short.MAX_VALUE)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(labelSearchporDpi)
@@ -656,11 +738,13 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                 .addComponent(labelSearchbycarne)
                 .addGap(18, 18, 18)
                 .addComponent(txtSearchCarne, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(labelVerInformación)
                 .addGap(33, 33, 33)
-                .addComponent(labelAddReport, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(95, 95, 95))
+                .addComponent(labelVerInformación)
+                .addGap(18, 18, 18)
+                .addComponent(labelAddReport)
+                .addGap(18, 18, 18)
+                .addComponent(labelVerReporte)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -670,20 +754,19 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                     .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(labelSearchbycarne, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(txtSearchByEncargado)
-                        .addComponent(txtSearchCarne, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtSearchCarne, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(labelAddReport, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(labelVerInformación, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(labelVerReporte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelSearchporDpi, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(labelAddReport, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(labelVerInformación, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(labelSearchporDpi, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(7, 7, 7)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 584, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("tab2", jPanel8);
+        jTabbedPane1.addTab("2", jPanel8);
 
         jPanel14.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -752,7 +835,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                     .addGroup(jPanel15Layout.createSequentialGroup()
                         .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txtNombreTerapista, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE))
+                        .addComponent(txtNombreTerapista, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE))
                     .addComponent(btnClearTerapista, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -790,12 +873,12 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
             .addGroup(jPanel14Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
                     .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("tab3", jPanel14);
+        jTabbedPane1.addTab("3", jPanel14);
 
         jPanel16.setBackground(new java.awt.Color(255, 255, 255));
         jPanel16.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Ver o editar información", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 18))); // NOI18N
@@ -813,62 +896,15 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
 
         jLabel22.setText("* Edad:");
 
-        txtAge1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtAge1ActionPerformed(evt);
-            }
-        });
-
         dateChooser1.setDateFormatString("y-M-d");
-        dateChooser1.addContainerListener(new java.awt.event.ContainerAdapter() {
-            public void componentAdded(java.awt.event.ContainerEvent evt) {
-                dateChooser1ComponentAdded(evt);
-            }
-        });
-        dateChooser1.addAncestorListener(new javax.swing.event.AncestorListener() {
-            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
-                dateChooser1AncestorAdded(evt);
-            }
-            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
-            }
-            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
-            }
-        });
-        dateChooser1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                dateChooser1MouseClicked(evt);
-            }
-        });
-        dateChooser1.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-            }
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-                dateChooser1InputMethodTextChanged(evt);
-            }
-        });
 
         jLabel23.setText("Tipo de programa:");
 
         radio100Info.setText("100 % becado");
-        radio100Info.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radio100InfoActionPerformed(evt);
-            }
-        });
 
         radio51info.setText("50 % becado");
-        radio51info.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radio51infoActionPerformed(evt);
-            }
-        });
 
         radioNoBecadoInfo.setText("No becado");
-        radioNoBecadoInfo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radioNoBecadoInfoActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
         jPanel17.setLayout(jPanel17Layout);
@@ -899,7 +935,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                         .addComponent(radio51info, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(radioNoBecadoInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 599, Short.MAX_VALUE))))
+                        .addGap(0, 617, Short.MAX_VALUE))))
         );
         jPanel17Layout.setVerticalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -941,11 +977,6 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
 
         jLabel24.setText("* Condición:");
 
-        listCondiciones1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                listCondiciones1MouseClicked(evt);
-            }
-        });
         jScrollPane4.setViewportView(listCondiciones1);
 
         jLabel25.setText("Otra (especifíque):");
@@ -990,21 +1021,9 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         jPanel19.setBackground(new java.awt.Color(255, 255, 255));
         jPanel19.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del encargado", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
 
-        txtDpiEncargado1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtDpiEncargado1KeyTyped(evt);
-            }
-        });
-
         jLabel27.setText("* DPI:");
 
         jLabel28.setText("* Nombre:");
-
-        txtNameEncargado1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNameEncargado1ActionPerformed(evt);
-            }
-        });
 
         jLabel29.setText("* Dirección:");
 
@@ -1019,11 +1038,6 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         jLabel31.setText("Condición socio-económica:");
 
         radioIngresos11.setText("Ingresos inferiores a Q 1,000");
-        radioIngresos11.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radioIngresos11ActionPerformed(evt);
-            }
-        });
 
         radioIngresos22.setText("Ingresos superiores a Q 1,000");
 
@@ -1152,10 +1166,96 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                 .addComponent(jPanel19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(116, Short.MAX_VALUE))
+                .addContainerGap(64, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("tab4", jPanel16);
+        jTabbedPane1.addTab("4", jPanel16);
+
+        jPanel9.setBackground(new java.awt.Color(255, 255, 255));
+
+        jScrollPane5.setBackground(new java.awt.Color(255, 255, 255));
+
+        txtArea.setColumns(20);
+        txtArea.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        txtArea.setRows(5);
+        jScrollPane5.setViewportView(txtArea);
+
+        jPanel10.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Filtar reporte por fecha", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
+
+        jLabel34.setText("Fecha 1:");
+
+        dateChooser2.setDateFormatString("y-M-d");
+
+        labelSelectFilePaciente1.setText("Fecha 2:");
+        labelSelectFilePaciente1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelSelectFilePaciente1MouseClicked(evt);
+            }
+        });
+
+        dateChooser3.setDateFormatString("y-M-d");
+
+        btnSearchReportFecha.setText("Realizar consulta");
+
+        btnPDF.setText("PDF");
+
+        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addComponent(jLabel34)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(dateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelSelectFilePaciente1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(dateChooser3, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnSearchReportFecha)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnPDF)
+                .addContainerGap(510, Short.MAX_VALUE))
+        );
+        jPanel10Layout.setVerticalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addGap(7, 7, 7)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnSearchReportFecha)
+                        .addComponent(btnPDF))
+                    .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(dateChooser2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(dateChooser3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(labelSelectFilePaciente1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel34, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(96, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane5))
+                .addContainerGap())
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("5", jPanel9);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setPreferredSize(new java.awt.Dimension(277, 325));
@@ -1334,7 +1434,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 714, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE)
             .addComponent(jTabbedPane1)
         );
 
@@ -1438,72 +1538,75 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
 
     private void btnSaveDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveDataActionPerformed
         // TODO add your handling code here:
-        JTextField auxi = (JTextField) dateChooser.getDateEditor().getUiComponent();
-        JRadioButton auxiBtn = new JRadioButton();
-        JRadioButton auxiBtn2 = new JRadioButton();
-        boolean seleccionado = false;
-        boolean ingresoSeleecionado = false;
-        if (group1.isSelected(radio100.getModel())) {
-            auxiBtn = radio100;
-            seleccionado = true;
-        } else if (group1.isSelected(radio50.getModel())) {
-            auxiBtn = radio50;
-            seleccionado = true;
-        } else if (group1.isSelected(radioNoBecado.getModel())) {
-            auxiBtn = radioNoBecado;
-            seleccionado = true;
-        }
-        if (group2.isSelected(radioIngresos1.getModel())) {
-            ingresoSeleecionado = true;
-            auxiBtn2 = radioIngresos1;
-        } else if (group2.isSelected(radioIngresos2.getModel())) {
-            ingresoSeleecionado = true;
-            auxiBtn2 = radioIngresos2;
-        } else if (group2.isSelected(radioIngresos3.getModel())) {
-            ingresoSeleecionado = true;
-            auxiBtn2 = radioIngresos3;
-        }
-        //verificamos si se ha seleccionado 
-        if (seleccionado && ingresoSeleecionado) {
-            //agreamos al paciente
+
+        //validamos campos
+        if (txtAge.getText().isBlank()
+                || txtName.getText().isBlank()
+                || txtCarne.getText().isBlank()
+                || txtDireccion.getText().isBlank()
+                || txtDpiEncargado.getText().isBlank()
+                || txtNameEncargado.getText().isBlank()) {
+
+            JOptionPane.showMessageDialog(null,
+                    "Debe llenar los campos obligatorios.",
+                    "CAMPOS OBLIGATORIOS",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JTextField auxi = (JTextField) dateChooser.getDateEditor().getUiComponent();
+            JRadioButton auxiBtn = new JRadioButton();
+            JRadioButton auxiBtn2 = new JRadioButton();
+            boolean seleccionado = false;
+            boolean ingresoSeleccionado = false;
+            boolean terapiaSelect = false;
+            //validamos si selecciona el tipo de programa
+            if (group1.isSelected(radio100.getModel())) {
+                auxiBtn = radio100;
+                seleccionado = true;
+            } else if (group1.isSelected(radio50.getModel())) {
+                auxiBtn = radio50;
+                seleccionado = true;
+            } else if (group1.isSelected(radioNoBecado.getModel())) {
+                auxiBtn = radioNoBecado;
+                seleccionado = true;
+            }
+            //valiamos se selecciona el rango de ingresos
+            if (group2.isSelected(radioIngresos1.getModel())) {
+                ingresoSeleccionado = true;
+                auxiBtn2 = radioIngresos1;
+            } else if (group2.isSelected(radioIngresos2.getModel())) {
+                ingresoSeleccionado = true;
+                auxiBtn2 = radioIngresos2;
+            } else if (group2.isSelected(radioIngresos3.getModel())) {
+                ingresoSeleccionado = true;
+                auxiBtn2 = radioIngresos3;
+            }
+            //Creamos al encargado
+            Encargado encargado = Encargado.builder().
+                    dpi(txtDpiEncargado.getText()).
+                    nombre(txtNameEncargado.getText()).
+                    telefono(txtTelefono.getText()).
+                    direccion(txtDireccion.getText()).
+                    condicionEconomica(auxiBtn2.getText()).
+                    tipoDocumento("").build();
+            //creamos al paciente
             String[] datosTerapista = comboTerapistas.getSelectedItem().toString().split(",");
             String dpiterapista = datosTerapista[0];
-            System.out.println("dpi terapista " + dpiterapista);
             String terapia = " ";
             if (checkHabla.isSelected()) {
                 terapia += checkHabla.getText();
                 terapia += " ";
+                terapiaSelect = true;
             }
             if (checkOcupacional.isSelected()) {
                 terapia += checkOcupacional.getText();
                 terapia += " ";
+                terapiaSelect = true;
             }
             if (checkPsicologico.isSelected()) {
                 terapia += checkPsicologico.getText();
                 terapia += " ";
+                terapiaSelect = true;
             }
-            //verficamos si el encargado ya existe para no repetir datos
-            if (encargadoAuxi == null) {
-                //agregamos al encargado 
-                controlDatos.getEncargadoDB().insert(
-                        Encargado.builder().
-                                dpi(txtDpiEncargado.getText()).
-                                nombre(txtNameEncargado.getText()).
-                                telefono(txtTelefono.getText()).
-                                direccion(txtDireccion.getText()).
-                                condicionEconomica(auxiBtn2.getText()).
-                                rutaDocumento("").build());
-            } else {
-                controlDatos.getEncargadoDB().insert(
-                        Encargado.builder().
-                                dpi(txtDpiEncargado.getText()).
-                                nombre(txtNameEncargado.getText()).
-                                telefono(txtTelefono.getText()).
-                                direccion(txtDireccion.getText()).
-                                condicionEconomica(auxiBtn2.getText()).
-                                rutaDocumento("").build());
-            }
-            //agregamos al paciente
             Paciente nuevoPaciente = Paciente.builder().
                     carne(txtCarne.getText()).
                     nombre(txtName.getText()).
@@ -1515,40 +1618,52 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                     dpiEncargado(txtDpiEncargado.getText()).
                     enfermedadCronica(txtEnfermedad.getText()).
                     build();
-            System.out.println(nuevoPaciente.toString());
-            if (controlDatos.getPacienteDB().insert(
-                    nuevoPaciente)) {
-
-                //agregamos su condicion-física
-                if (!txtOtraCondición.getText().isBlank()) {
-                    //creamos la nueva en la base de datos
-                    controlDatos.getCondicionDB().insert(Condicion.builder().nombre(txtOtraCondición.getText()).build());
-                    //agreamos al paciente el nuevo y el resto
-                    controlDatos.getCondicionPacienteDB().insert(
-                            CondicionPaciente.builder().
-                                    nombreCondicion(txtOtraCondición.getText()).
-                                    carnePaciente(txtCarne.getText()).
-                                    build());
-                    agregarOtrasCondiciones();
-                } else {
-                    agregarOtrasCondiciones();
+            //validamos si selecciono algún archivo
+            boolean pacienteConArchivo = false;
+            boolean encargadoConArchivo = false;
+            if (!rutadpiEncargado.equals("")) {
+                try {
+                    InputStream in = new FileInputStream(rutadpiEncargado);
+                    byte[] arrayBytes = in.readAllBytes();
+                    encargado.setFileBytes(arrayBytes);
+                    encargadoConArchivo = true;
+                } catch (IOException ex) {
+                    Logger.getLogger(WindowSoyKpaz.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                JOptionPane.showMessageDialog(null,
-                        "Se guardó correctamente los datos.",
-                        "DATOS GUARDADOS.", JOptionPane.INFORMATION_MESSAGE);
+            }
+            if (!rutadpiPaciente.equals("")) {
+                try {
+                    InputStream in = new FileInputStream(rutadpiPaciente);
+                    byte[] bytesArray = in.readAllBytes();
+                    nuevoPaciente.setFileBytes(bytesArray);
+                    pacienteConArchivo = true;
+                } catch (IOException ex) {
+                    Logger.getLogger(WindowSoyKpaz.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            //verificamos si se han seleccionado las opciones necesarias
+            if (seleccionado && ingresoSeleccionado && terapiaSelect) {
+                System.out.println(txtDpiEncargado.getText());
+                encargadoAuxi = controlDatos.getEncargadoDB().getEncargado(txtDpiEncargado.getText());
+                if (encargadoAuxi.getDpi() != null) {
+                    //agregar paciente
+                    agregarPaciente(pacienteConArchivo, nuevoPaciente);
+                } else {
+                    if (encargadoConArchivo) {
+                        controlDatos.getEncargadoDB().insertWithFile(encargado);
+                    } else {
+                        controlDatos.getEncargadoDB().insertWithoutFile(encargado);
+                    }
+                    agregarPaciente(pacienteConArchivo, nuevoPaciente);
+                }
             } else {
                 JOptionPane.showMessageDialog(null,
-                        "No pudimos guardar los datos, consulte con el programador.",
-                        "ERROR AL GUARDAR DATOS",
+                        "Debe seleccionar el tipo de programa, la terapia y el rango de ingresos del encargado",
+                        "SELECCIONAR PROGRAMA",
                         JOptionPane.INFORMATION_MESSAGE);
             }
-        } else {
-            JOptionPane.showMessageDialog(null,
-                    "Debe seleccionar el tipo de programa o el rango de ingresos del encargado",
-                    "SELECCIONAR PROGRAMA",
-                    JOptionPane.INFORMATION_MESSAGE);
         }
-
+        llenarCondiciones(listCondiciones);
     }//GEN-LAST:event_btnSaveDataActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
@@ -1653,57 +1768,12 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         jTabbedPane1.setSelectedIndex(2);
     }//GEN-LAST:event_panelTerapistasMouseClicked
 
-    private void txtAge1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAge1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtAge1ActionPerformed
-
-    private void dateChooser1ComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_dateChooser1ComponentAdded
-        // TODO add your handling code here:
-    }//GEN-LAST:event_dateChooser1ComponentAdded
-
-    private void dateChooser1AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_dateChooser1AncestorAdded
-        // TODO add your handling code here:
-    }//GEN-LAST:event_dateChooser1AncestorAdded
-
-    private void dateChooser1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dateChooser1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_dateChooser1MouseClicked
-
-    private void dateChooser1InputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_dateChooser1InputMethodTextChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_dateChooser1InputMethodTextChanged
-
-    private void radio100InfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radio100InfoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_radio100InfoActionPerformed
-
-    private void radio51infoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radio51infoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_radio51infoActionPerformed
-
-    private void radioNoBecadoInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioNoBecadoInfoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_radioNoBecadoInfoActionPerformed
-
-    private void listCondiciones1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listCondiciones1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_listCondiciones1MouseClicked
-
-    private void txtDpiEncargado1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDpiEncargado1KeyTyped
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtDpiEncargado1KeyTyped
-
-    private void txtNameEncargado1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNameEncargado1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtNameEncargado1ActionPerformed
-
     private void txtTelefono1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefono1KeyTyped
         // TODO add your handling code here:
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtTelefono1KeyTyped
-
-    private void radioIngresos11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioIngresos11ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_radioIngresos11ActionPerformed
 
     private void txtSearchByEncargadoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchByEncargadoKeyReleased
         // TODO add your handling code here:
@@ -1717,18 +1787,64 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         llenarTablaPacientes(listPacientes);
     }//GEN-LAST:event_txtSearchCarneKeyReleased
 
+    private void labelSelectFilePacienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelSelectFilePacienteMouseClicked
+        this.rutadpiPaciente = rutas.pathChoserOpen(null);
+        if (rutadpiPaciente != "") {
+            File f = new File(rutadpiPaciente);
+            txtrutadpibeneficiario.setText(f.getName());
+        }
+    }//GEN-LAST:event_labelSelectFilePacienteMouseClicked
+
+    private void labelSelectFileEncargadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelSelectFileEncargadoMouseClicked
+        // TODO add your handling code here:
+        this.rutadpiEncargado = rutas.pathChoserOpen(null);
+        if (!rutadpiEncargado.equals("")) {
+            File f = new File(rutadpiEncargado);
+            txtRutadpiPadre.setText(f.getName());
+
+        }
+    }//GEN-LAST:event_labelSelectFileEncargadoMouseClicked
+
+    private void labelAddReportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelAddReportMouseClicked
+
+        int fila = tablePacientes.getSelectedRow();
+        if (fila > 0) {
+            WinReport winReport = new WinReport(controlDatos, listPacientes.get(fila),this);
+            winReport.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Debe seleccionar al paciene en la tabla.",
+                    "SELECCIONAR AL PACIENTE",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+
+    }//GEN-LAST:event_labelAddReportMouseClicked
+
+    private void labelVerReporteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelVerReporteMouseClicked
+        jTabbedPane1.setSelectedIndex(4);
+        llenarAreaReporte();
+    }//GEN-LAST:event_labelVerReporteMouseClicked
+
+    private void labelSelectFilePaciente1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelSelectFilePaciente1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_labelSelectFilePaciente1MouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnClearTerapista;
+    private javax.swing.JButton btnPDF;
     private javax.swing.JButton btnSaveData;
     private javax.swing.JButton btnSaveTerapista;
+    private javax.swing.JButton btnSearchReportFecha;
     private javax.swing.JCheckBox checkHabla;
     private javax.swing.JCheckBox checkOcupacional;
     private javax.swing.JCheckBox checkPsicologico;
     private javax.swing.JComboBox<String> comboTerapistas;
     private com.toedter.calendar.JDateChooser dateChooser;
     private com.toedter.calendar.JDateChooser dateChooser1;
+    private com.toedter.calendar.JDateChooser dateChooser2;
+    private com.toedter.calendar.JDateChooser dateChooser3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1756,6 +1872,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -1763,6 +1880,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel16;
@@ -1777,10 +1895,12 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel label1;
     private javax.swing.JLabel labelAddReport;
@@ -1788,8 +1908,12 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JLabel labelPacientes;
     private javax.swing.JLabel labelSearchbycarne;
     private javax.swing.JLabel labelSearchporDpi;
+    private javax.swing.JLabel labelSelectFileEncargado;
+    private javax.swing.JLabel labelSelectFilePaciente;
+    private javax.swing.JLabel labelSelectFilePaciente1;
     private javax.swing.JLabel labelTerapistas;
     private javax.swing.JLabel labelVerInformación;
+    private javax.swing.JLabel labelVerReporte;
     private javax.swing.JList<String> listCondiciones;
     private javax.swing.JList<String> listCondiciones1;
     private javax.swing.JPanel panelNuevoPaciente;
@@ -1811,6 +1935,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JTable tableTerapistas;
     private javax.swing.JTextField txtAge;
     private javax.swing.JTextField txtAge1;
+    private javax.swing.JTextArea txtArea;
     private javax.swing.JTextField txtCarne;
     private javax.swing.JTextField txtCarne1;
     private javax.swing.JTextField txtDireccion;
@@ -1826,6 +1951,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JTextField txtNombreTerapista;
     private javax.swing.JTextField txtOtraCondición;
     private javax.swing.JTextField txtOtraCondición1;
+    private javax.swing.JTextField txtRutadpiPadre;
     private javax.swing.JTextField txtSearchByEncargado;
     private javax.swing.JTextField txtSearchCarne;
     private javax.swing.JTextField txtTelefono;
@@ -1833,6 +1959,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JTextField txtTerapiaInfo;
     private javax.swing.JTextField txtTerapistaInfo;
     private javax.swing.JTextField txtdpiTerapista;
+    private javax.swing.JTextField txtrutadpibeneficiario;
     // End of variables declaration//GEN-END:variables
 
     private void establecerFocus() {
@@ -1881,9 +2008,13 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                                         break;
                                 }
                             } catch (Exception ex) {
-                                System.out.println(ex.getMessage());
+                                System.out.println(ex.getMessage() + " ocurrió algo");
                             }
-                            System.out.println(encargadoAuxi.getCondicionEconomica());
+                        } else {
+                            System.out.println("hola txts");
+                            txtNameEncargado.setText("");
+                            txtDireccion.setText("");
+                            txtTelefono.setText("");
                         }
                         txtNameEncargado.requestFocus();
                     } else if (e.getComponent().equals(txtNameEncargado)) {
@@ -1929,8 +2060,38 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         }
     }
 
-    private void agregarPaciente() {
-
+    private void agregarPaciente(boolean pacienteConArchivo, Paciente nuevoPaciente) {
+        if (pacienteConArchivo) {
+            if (controlDatos.getPacienteDB().insertWithFile(nuevoPaciente)) {
+                //todo bien
+                agregarCondicionesFisicas();
+                JOptionPane.showMessageDialog(null,
+                        "Se ha guardado los datos correctamente.",
+                        "GUARDANDO DATOS",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                //algo paso
+                JOptionPane.showMessageDialog(null,
+                        "No pudimos guardar los datos.",
+                        "ERROR AL GUARDAR DATOS",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            if (controlDatos.getPacienteDB().insertWithoutFile(nuevoPaciente)) {
+                //todo bien
+                agregarCondicionesFisicas();
+                JOptionPane.showMessageDialog(null,
+                        "Se ha guardado los datos correctamente.",
+                        "GUARDANDO DATOS",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                //algo paso
+                JOptionPane.showMessageDialog(null,
+                        "No pudimos guardar los datos.",
+                        "ERROR AL GUARDAR DATOS",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
     }
 
     private void llenarTablaPacientes(List<PacienteInfo> listPacientes) {
@@ -1959,4 +2120,40 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
             dfModel.addRow(data);
         }
     }
+
+    private void agregarCondicionesFisicas() {
+        if (!txtOtraCondición.getText().isBlank()) {
+            //creamos la nueva en la base de datos
+            controlDatos.getCondicionDB().insert(Condicion.builder().nombre(txtOtraCondición.getText()).build());
+            //agreamos al paciente el nuevo y el resto
+            controlDatos.getCondicionPacienteDB().insert(
+                    CondicionPaciente.builder().
+                            nombreCondicion(txtOtraCondición.getText()).
+                            carnePaciente(txtCarne.getText()).
+                            build());
+            agregarOtrasCondiciones();
+        } else {
+            agregarOtrasCondiciones();
+        }
+    }
+
+    private void llenarAreaReporte() {
+        String r = "";
+        int fila = tablePacientes.getSelectedRow();
+        if (fila > 0) {
+            PacienteInfo pacienteInfo = listPacientes.get(fila);
+            List<Reporte> list = controlDatos.getReporteDB().getReportes(pacienteInfo.getCarne());
+
+            r += "Carné: " + pacienteInfo.getNombre() + "  Nombre: " + pacienteInfo.getNombre();
+            r += "\n";
+            for (int i = 0; i < list.size(); i++) {
+                r += list.get(i).getFecha();
+                r += "\n";
+                r += list.get(i).getContenido();
+                r += "\n\n";
+            }
+        }
+        txtArea.setText(r);
+    }
+
 }

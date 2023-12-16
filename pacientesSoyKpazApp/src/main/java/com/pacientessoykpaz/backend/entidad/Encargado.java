@@ -20,7 +20,8 @@ public class Encargado {
     private String telefono;
     private String direccion;
     private String condicionEconomica;
-    private String rutaDocumento;
+    private String tipoDocumento;
     private String nombre;
+    private byte[] fileBytes;
 
 }
