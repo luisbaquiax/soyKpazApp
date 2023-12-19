@@ -1860,11 +1860,11 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                 }
             }
             Encargado encargado = controlDatos.getEncargadoDB().getEncargado(paciente.getDpiEncargado());
-//            String path = rutas.pathChoserSave(null);
-//            if (!path.equals("")) {
-//                reportePDF.writePDF(new File(path+".pdf"), listReport, pacienteInfo, paciente, encargado);
-//            }
-            reportePDF.writePDF(new File("reporte.pdf"), listReport, pacienteInfo, paciente, encargado);
+            String path = rutas.pathChoserSave(null);
+            if (!path.equals("")) {
+                reportePDF.writePDF(new File(path+".pdf"), listReport, pacienteInfo, paciente, encargado);
+            }
+//            reportePDF.writePDF(new File("reporte.pdf"), listReport, pacienteInfo, paciente, encargado);
         } catch (Exception e) {
             e.printStackTrace();
         }
