@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS paciente(
     terapia VARCHAR(100),
     tipo_archivo VARCHAR(10),
     archivo BLOB,
+    horario VARCHAR(100) NOT NULL,
     PRIMARY KEY(carne),
     FOREIGN KEY(dpi_encargado) REFERENCES encargado(dpi),
     FOREIGN KEY(dpi_terapista) REFERENCES terapista(dpi)

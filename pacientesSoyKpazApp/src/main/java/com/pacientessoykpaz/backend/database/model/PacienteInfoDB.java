@@ -23,7 +23,7 @@ public class PacienteInfoDB {
 
     private static final String SELECT
             = """
-             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia,
+             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia, p.horario,
              t.nombre AS terapista, e.nombre AS encargado, e.telefono
              FROM paciente p
              INNER JOIN terapista t
@@ -34,7 +34,7 @@ public class PacienteInfoDB {
               """;
     private static final String SELECT_BY_ENCARGADO
             = """
-             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia,
+             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia, p.horario,
              t.nombre AS terapista, e.nombre AS encargado, e.telefono
              FROM paciente p
              INNER JOIN terapista t
@@ -47,7 +47,7 @@ public class PacienteInfoDB {
 
     private static final String SELECT_BY_CARNE
             = """
-             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia,
+             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia, p.horario,
              t.nombre AS terapista, e.nombre AS encargado, e.telefono
              FROM paciente p
              INNER JOIN terapista t
@@ -131,6 +131,7 @@ public class PacienteInfoDB {
                 resultSet.getString("terapia"),
                 resultSet.getString("terapista"),
                 resultSet.getString("encargado"),
-                resultSet.getString("telefono"));
+                resultSet.getString("telefono"),
+                resultSet.getString("horario"));
     }
 }

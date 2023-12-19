@@ -13,6 +13,7 @@ com\pacientessoykpaz\frontend\WindowSoyKpaz$15.class
 com\pacientessoykpaz\backend\entidad\TerapiaPaciente.class
 com\pacientessoykpaz\frontend\WinReport$1.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$25.class
+com\pacientessoykpaz\frontend\WindowSoyKpaz$35.class
 com\pacientessoykpaz\backend\entidad\Terapia.class
 com\pacientessoykpaz\util\Utiles.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$32.class
@@ -37,6 +38,7 @@ com\pacientessoykpaz\frontend\WindowSoyKpaz$23.class
 com\pacientessoykpaz\backend\entidad\CondicionPaciente.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$1.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$13.class
+com\pacientessoykpaz\frontend\WindowSoyKpaz$33.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$10.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$20.class
 com\pacientessoykpaz\backend\entidad\PacienteInfo.class
@@ -58,6 +60,7 @@ com\pacientessoykpaz\frontend\WindowSoyKpaz$17.class
 com\pacientessoykpaz\backend\entidad\Reporte.class
 com\pacientessoykpaz\backend\database\model\CondicionDB.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$26.class
+com\pacientessoykpaz\frontend\WindowSoyKpaz$34.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$2.class
 com\pacientessoykpaz\backend\database\model\FechaDB.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$9.class

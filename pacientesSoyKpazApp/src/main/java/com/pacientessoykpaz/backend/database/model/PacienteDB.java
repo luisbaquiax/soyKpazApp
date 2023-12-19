@@ -36,8 +36,9 @@ public class PacienteDB {
                 dpi_terapista,
                 tipo_archivo,
                 terapia,
-                archivo) 
-              values(?,?,?,?,?,?,?,?,?,?,?)
+                archivo,
+                horario) 
+              values(?,?,?,?,?,?,?,?,?,?,?,?)
               """;
     private static final String INSERT_WHITOUT_FILE
             = """
@@ -50,8 +51,9 @@ public class PacienteDB {
                 tipo_programa,
                 enfermedad_cronica,
                 dpi_terapista,
-                terapia) 
-              values(?,?,?,?,?,?,?,?,?)
+                terapia,
+                horario) 
+              values(?,?,?,?,?,?,?,?,?,?)
               """;
     private static final String SELECT = "SELECT * FROM paciente";
 
@@ -76,6 +78,7 @@ public class PacienteDB {
             statement.setString(8, paciente.getDpiTerapista());
             statement.setString(9, paciente.getTipoArchivo());
             statement.setString(10, paciente.getTerapia());
+            statement.setString(11, paciente.getHorario());
 
             InputStream in = new ByteArrayInputStream(paciente.getFileBytes());
             statement.setBlob(11, in);
@@ -106,6 +109,8 @@ public class PacienteDB {
             statement.setString(7, paciente.getEnfermedadCronica());
             statement.setString(8, paciente.getDpiTerapista());
             statement.setString(9, paciente.getTerapia());
+            statement.setString(10, paciente.getHorario());
+
             statement.executeUpdate();
             statement.close();
             return true;
@@ -139,8 +144,7 @@ public class PacienteDB {
     private Paciente get(ResultSet resultSet) throws SQLException {
 
         Blob blob = resultSet.getBlob("archivo");
-        byte[] byteArray = blob.getBytes(1, (int) blob.length());
-        return Paciente.builder().
+        Paciente paciente = Paciente.builder().
                 carne(resutSet.getString("carne")).
                 nombre(resutSet.getString("nombre")).
                 fechaNacimiento(resutSet.getString("fecha_nacimiento")).
@@ -149,9 +153,15 @@ public class PacienteDB {
                 tipoPrograma(resutSet.getString("tipo_programa")).
                 enfermedadCronica(resutSet.getString("enfermedad_cronica")).
                 dpiTerapista(resutSet.getString("dpi_terapista")).
-                tipoArchivo(resutSet.getString("tipo_documento")).
+                tipoArchivo(resutSet.getString("tipo_archivo")).
                 terapia(resultSet.getString("terapia")).
-                fileBytes(byteArray).
+                horario(resultSet.getString("horario")).
                 build();
+        if (blob != null) {
+            byte[] byteArray = blob.getBytes(1, (int) blob.length());
+            paciente.setFileBytes(byteArray);
+        }
+
+        return paciente;
     }
 }

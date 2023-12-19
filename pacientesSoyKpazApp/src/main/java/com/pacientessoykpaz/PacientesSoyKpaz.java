@@ -16,8 +16,7 @@ public class PacientesSoyKpaz {
 
     public static void main(String[] args) {
         WindowSoyKpaz k = new WindowSoyKpaz();
+        System.out.println(k.getWidth());
         k.setVisible(true);
-//        ReportePDF pdf = new ReportePDF();
-//        pdf.writePDF();
     }
 }
