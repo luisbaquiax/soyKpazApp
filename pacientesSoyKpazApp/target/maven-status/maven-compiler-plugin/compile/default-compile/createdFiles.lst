@@ -17,10 +17,13 @@ com\pacientessoykpaz\backend\entidad\Terapia.class
 com\pacientessoykpaz\util\Utiles.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$32.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$12.class
+com\pacientessoykpaz\frontend\WindowSoyKpaz$52.class
 com\pacientessoykpaz\backend\database\coneccion\ConeccionDB.class
 com\pacientessoykpaz\frontend\WinReport$3.class
+com\pacientessoykpaz\frontend\About$1.class
 com\pacientessoykpaz\frontend\CambioCondicion$1.class
 com\pacientessoykpaz\backend\database\model\EncargadoDB.class
+com\pacientessoykpaz\frontend\About.class
 com\pacientessoykpaz\backend\database\model\PacienteDB.class
 com\pacientessoykpaz\frontend\WinReport$2.class
 com\pacientessoykpaz\backend\entidad\Condicion.class
@@ -48,6 +51,7 @@ com\pacientessoykpaz\frontend\WindowSoyKpaz$11.class
 com\pacientessoykpaz\backend\entidad\Terapista$TerapistaBuilder.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$29.class
 com\pacientessoykpaz\backend\entidad\Encargado$EncargadoBuilder.class
+com\pacientessoykpaz\frontend\WindowSoyKpaz$51.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$41.class
 com\pacientessoykpaz\backend\controldata\ControlDatos.class
 com\pacientessoykpaz\backend\entidad\Encargado.class
@@ -69,8 +73,10 @@ com\pacientessoykpaz\frontend\WindowSoyKpaz$4.class
 com\pacientessoykpaz\backend\database\model\ReporteDB.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$43.class
 com\pacientessoykpaz\frontend\CambioCondicion.class
+com\pacientessoykpaz\frontend\WindowSoyKpaz$53.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$13.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$20.class
+com\pacientessoykpaz\frontend\About$2.class
 com\pacientessoykpaz\backend\entidad\PacienteInfo.class
 com\pacientessoykpaz\backend\entidad\Reporte$ReporteBuilder.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$30.class
@@ -81,8 +87,10 @@ com\pacientessoykpaz\frontend\WindowSoyKpaz$42.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$14.class
 com\pacientessoykpaz\backend\database\model\CondicionDB.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$37.class
+com\pacientessoykpaz\frontend\WindowSoyKpaz$54.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$26.class
 com\pacientessoykpaz\backend\database\model\FechaDB.class
+com\pacientessoykpaz\frontend\About$3.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$49.class
 com\pacientessoykpaz\util\ManejoRutas.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$31.class

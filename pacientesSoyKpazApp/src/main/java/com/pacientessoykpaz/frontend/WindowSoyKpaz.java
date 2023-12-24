@@ -14,6 +14,7 @@ import com.pacientessoykpaz.backend.entidad.Terapista;
 import com.pacientessoykpaz.util.ManejoRutas;
 import com.pacientessoykpaz.util.Utiles;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -22,6 +23,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -108,6 +111,11 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         utiles.setIconLabel(labelDesactivar, "/img/desactivar.png", TAM);
         utiles.ponerIconoButton(btnSearchReportFecha, "/img/search.png", TAM);
         utiles.ponerIconoButton(btnPDF, "/img/pdf.png", TAM);
+        int tam2 = 60;
+        utiles.ponerIconoButton(btnlovePDF, "/img/lovepdf.png", tam2);
+        utiles.ponerIconoButton(btnUrlJoinPDF, "/img/join.png", tam2);
+        utiles.ponerIconoButton(btnUrlEditpdf, "/img/editpdf.png", tam2);
+        utiles.ponerIconoButton(btnUrlConvertImgeToPDF, "/img/imagepdf.png", tam2);
 
         llenarCondiciones(listCondiciones);
         llenarComboTerapista(comboTerapistas);
@@ -129,6 +137,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         } catch (IllegalAccessException ex) {
             Logger.getLogger(WindowSoyKpaz.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     /**
@@ -149,8 +158,8 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         labelPacientes = new javax.swing.JLabel();
         panelTerapistas = new javax.swing.JPanel();
         labelTerapistas = new javax.swing.JLabel();
-        panelTerapistas1 = new javax.swing.JPanel();
-        labelTerapistas1 = new javax.swing.JLabel();
+        panelAutor = new javax.swing.JPanel();
+        labelAutor = new javax.swing.JLabel();
         panelHerramientas = new javax.swing.JPanel();
         labelHerramientas = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
@@ -278,6 +287,12 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         txtFecha2 = new com.toedter.calendar.JDateChooser();
         btnSearchReportFecha = new javax.swing.JButton();
         btnPDF = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        btnlovePDF = new javax.swing.JButton();
+        btnUrlEditpdf = new javax.swing.JButton();
+        btnUrlJoinPDF = new javax.swing.JButton();
+        btnUrlConvertImgeToPDF = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SoyKPazONG");
@@ -429,50 +444,50 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
-        panelTerapistas1.setBackground(new java.awt.Color(51, 204, 0));
-        panelTerapistas1.addMouseListener(new java.awt.event.MouseAdapter() {
+        panelAutor.setBackground(new java.awt.Color(51, 204, 0));
+        panelAutor.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                panelTerapistas1MouseClicked(evt);
+                panelAutorMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                panelTerapistas1MouseEntered(evt);
+                panelAutorMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                panelTerapistas1MouseExited(evt);
+                panelAutorMouseExited(evt);
             }
         });
 
-        labelTerapistas1.setBackground(new java.awt.Color(255, 255, 255));
-        labelTerapistas1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        labelTerapistas1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelTerapistas1.setText("Acerca de ...");
-        labelTerapistas1.setToolTipText("");
-        labelTerapistas1.addMouseListener(new java.awt.event.MouseAdapter() {
+        labelAutor.setBackground(new java.awt.Color(255, 255, 255));
+        labelAutor.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        labelAutor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelAutor.setText("Acerca de ...");
+        labelAutor.setToolTipText("");
+        labelAutor.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                labelTerapistas1MouseClicked(evt);
+                labelAutorMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                labelTerapistas1MouseEntered(evt);
+                labelAutorMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                labelTerapistas1MouseExited(evt);
+                labelAutorMouseExited(evt);
             }
         });
 
-        javax.swing.GroupLayout panelTerapistas1Layout = new javax.swing.GroupLayout(panelTerapistas1);
-        panelTerapistas1.setLayout(panelTerapistas1Layout);
-        panelTerapistas1Layout.setHorizontalGroup(
-            panelTerapistas1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTerapistas1Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelAutorLayout = new javax.swing.GroupLayout(panelAutor);
+        panelAutor.setLayout(panelAutorLayout);
+        panelAutorLayout.setHorizontalGroup(
+            panelAutorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelAutorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(labelTerapistas1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(labelAutor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        panelTerapistas1Layout.setVerticalGroup(
-            panelTerapistas1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTerapistas1Layout.createSequentialGroup()
+        panelAutorLayout.setVerticalGroup(
+            panelAutorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelAutorLayout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addComponent(labelTerapistas1)
+                .addComponent(labelAutor)
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
@@ -531,7 +546,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
             .addComponent(panelNuevoPaciente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelPacientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelTerapistas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelTerapistas1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelAutor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelHerramientas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         panelMenuLayout.setVerticalGroup(
@@ -547,7 +562,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelHerramientas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelTerapistas1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelAutor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -939,7 +954,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         tablePacientes.setGridColor(new java.awt.Color(255, 255, 255));
         jScrollPane2.setViewportView(tablePacientes);
 
-        jPanel2.setLayout(new java.awt.GridLayout());
+        jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
         btnAllPacientes.setText("Ver todos");
         btnAllPacientes.addActionListener(new java.awt.event.ActionListener() {
@@ -967,7 +982,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
 
         panelActions.setMinimumSize(new java.awt.Dimension(258, 28));
         panelActions.setPreferredSize(new java.awt.Dimension(622, 36));
-        panelActions.setLayout(new java.awt.GridLayout());
+        panelActions.setLayout(new java.awt.GridLayout(1, 0));
 
         labelVerReporte.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelVerReporte.setText("Ver reporte");
@@ -1596,6 +1611,85 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("5", panel5);
 
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Herramientas útiles para manipular PDFs", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
+
+        btnlovePDF.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnlovePDF.setText("I love PDF");
+        btnlovePDF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnlovePDFActionPerformed(evt);
+            }
+        });
+
+        btnUrlEditpdf.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnUrlEditpdf.setText("Editar PDF");
+        btnUrlEditpdf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUrlEditpdfActionPerformed(evt);
+            }
+        });
+
+        btnUrlJoinPDF.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnUrlJoinPDF.setText("Unir PDF");
+        btnUrlJoinPDF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUrlJoinPDFActionPerformed(evt);
+            }
+        });
+
+        btnUrlConvertImgeToPDF.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnUrlConvertImgeToPDF.setText("Convertir imgen a PDF");
+        btnUrlConvertImgeToPDF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUrlConvertImgeToPDFActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(btnlovePDF, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnUrlEditpdf, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+            .addComponent(btnUrlJoinPDF, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+            .addComponent(btnUrlConvertImgeToPDF, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(btnlovePDF)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnUrlEditpdf)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnUrlJoinPDF)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnUrlConvertImgeToPDF)
+                .addGap(0, 488, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("6", jPanel1);
+
         javax.swing.GroupLayout panelContenedorLayout = new javax.swing.GroupLayout(panelContenedor);
         panelContenedor.setLayout(panelContenedorLayout);
         panelContenedorLayout.setHorizontalGroup(
@@ -1993,7 +2087,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private void labelAddReportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelAddReportMouseClicked
 
         int fila = tablePacientes.getSelectedRow();
-        if (fila > 0) {
+        if (fila >= 0) {
             WinReport winReport = new WinReport(controlDatos, listPacientes.get(fila), this);
             winReport.setVisible(true);
         } else {
@@ -2155,35 +2249,35 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         new CambioCondicion(controlDatos, pacienteCambio, this).setVisible(true);
     }//GEN-LAST:event_btnCambiarCondicionActionPerformed
 
-    private void labelTerapistas1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelTerapistas1MouseClicked
+    private void labelAutorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelAutorMouseClicked
         // TODO add your handling code here:
-        verSobre();
-    }//GEN-LAST:event_labelTerapistas1MouseClicked
+        new About().setVisible(true);
+    }//GEN-LAST:event_labelAutorMouseClicked
 
-    private void labelTerapistas1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelTerapistas1MouseEntered
+    private void labelAutorMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelAutorMouseEntered
         // TODO add your handling code here:
-        labelTerapistas1.setBackground(new Color(51, 204, 0));
-    }//GEN-LAST:event_labelTerapistas1MouseEntered
+        panelAutor.setBackground(new Color(85, 255, 51));
+    }//GEN-LAST:event_labelAutorMouseEntered
 
-    private void labelTerapistas1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelTerapistas1MouseExited
+    private void labelAutorMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelAutorMouseExited
         // TODO add your handling code here:
-        labelTerapistas1.setBackground(new Color(85, 255, 51));
-    }//GEN-LAST:event_labelTerapistas1MouseExited
+        panelAutor.setBackground(new Color(51, 204, 0));
+    }//GEN-LAST:event_labelAutorMouseExited
 
-    private void panelTerapistas1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelTerapistas1MouseClicked
+    private void panelAutorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelAutorMouseClicked
         // TODO add your handling code here:
-        verSobre();
-    }//GEN-LAST:event_panelTerapistas1MouseClicked
+        new About().setVisible(true);
+    }//GEN-LAST:event_panelAutorMouseClicked
 
-    private void panelTerapistas1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelTerapistas1MouseEntered
+    private void panelAutorMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelAutorMouseEntered
         // TODO add your handling code here:
-        panelTerapistas1.setBackground(new Color(85, 255, 51));
-    }//GEN-LAST:event_panelTerapistas1MouseEntered
+        panelAutor.setBackground(new Color(85, 255, 51));
+    }//GEN-LAST:event_panelAutorMouseEntered
 
-    private void panelTerapistas1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelTerapistas1MouseExited
+    private void panelAutorMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelAutorMouseExited
         // TODO add your handling code here:
-        panelTerapistas1.setBackground(new Color(51, 204, 0));
-    }//GEN-LAST:event_panelTerapistas1MouseExited
+        panelAutor.setBackground(new Color(51, 204, 0));
+    }//GEN-LAST:event_panelAutorMouseExited
 
     private void labelChangeFileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelChangeFileMouseClicked
         // TODO add your handling code here:
@@ -2196,26 +2290,32 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
 
     private void labelHerramientasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelHerramientasMouseClicked
         // TODO add your handling code here:
+        jTabbedPane1.setSelectedIndex(5);
     }//GEN-LAST:event_labelHerramientasMouseClicked
 
     private void labelHerramientasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelHerramientasMouseEntered
         // TODO add your handling code here:
+        panelHerramientas.setBackground(new Color(85, 255, 51));
     }//GEN-LAST:event_labelHerramientasMouseEntered
 
     private void labelHerramientasMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelHerramientasMouseExited
         // TODO add your handling code here:
+        panelHerramientas.setBackground(new Color(51, 204, 0));
     }//GEN-LAST:event_labelHerramientasMouseExited
 
     private void panelHerramientasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelHerramientasMouseClicked
         // TODO add your handling code here:
+        jTabbedPane1.setSelectedIndex(5);
     }//GEN-LAST:event_panelHerramientasMouseClicked
 
     private void panelHerramientasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelHerramientasMouseEntered
         // TODO add your handling code here:
+        panelHerramientas.setBackground(new Color(85, 255, 51));
     }//GEN-LAST:event_panelHerramientasMouseEntered
 
     private void panelHerramientasMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelHerramientasMouseExited
         // TODO add your handling code here:
+        panelHerramientas.setBackground(new Color(51, 204, 0));
     }//GEN-LAST:event_panelHerramientasMouseExited
 
     private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosActionPerformed
@@ -2368,6 +2468,52 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         llenarTablaPacientes(listPacientes);
     }//GEN-LAST:event_btnDesactivePacientesActionPerformed
 
+    private void btnlovePDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlovePDFActionPerformed
+        // TODO add your handling code here:
+        try {
+            Desktop.getDesktop().browse(new URI("https://www.ilovepdf.com/es"));
+        } catch (IOException ex) {
+            Logger.getLogger(WindowSoyKpaz.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(WindowSoyKpaz.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnlovePDFActionPerformed
+
+    private void btnUrlEditpdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUrlEditpdfActionPerformed
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            Desktop.getDesktop().browse(new URI("https://www.ilovepdf.com/es/editar-pdf"));
+        } catch (IOException ex) {
+            Logger.getLogger(WindowSoyKpaz.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(WindowSoyKpaz.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnUrlEditpdfActionPerformed
+
+    private void btnUrlJoinPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUrlJoinPDFActionPerformed
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            Desktop.getDesktop().browse(new URI("https://www.ilovepdf.com/es/unir_pdf"));
+        } catch (IOException ex) {
+            Logger.getLogger(WindowSoyKpaz.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(WindowSoyKpaz.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnUrlJoinPDFActionPerformed
+
+    private void btnUrlConvertImgeToPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUrlConvertImgeToPDFActionPerformed
+        // TODO add your handling code here:
+        try {
+            Desktop.getDesktop().browse(new URI("https://www.ilovepdf.com/es/jpg_a_pdf"));
+        } catch (IOException ex) {
+            Logger.getLogger(WindowSoyKpaz.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(WindowSoyKpaz.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnUrlConvertImgeToPDFActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAllPacientes;
@@ -2382,6 +2528,10 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JButton btnSaveData;
     private javax.swing.JButton btnSaveTerapista;
     private javax.swing.JButton btnSearchReportFecha;
+    private javax.swing.JButton btnUrlConvertImgeToPDF;
+    private javax.swing.JButton btnUrlEditpdf;
+    private javax.swing.JButton btnUrlJoinPDF;
+    private javax.swing.JButton btnlovePDF;
     private javax.swing.JCheckBox checkCambiarOcupacional;
     private javax.swing.JCheckBox checkHabla;
     private javax.swing.JCheckBox checkHablaCambiar;
@@ -2415,6 +2565,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel15;
@@ -2426,6 +2577,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -2434,6 +2586,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel label1;
     private javax.swing.JLabel labelAddReport;
+    private javax.swing.JLabel labelAutor;
     private javax.swing.JLabel labelChangeFile;
     private javax.swing.JLabel labelDesactivar;
     private javax.swing.JLabel labelHerramientas;
@@ -2444,7 +2597,6 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JLabel labelSelectFilePaciente;
     private javax.swing.JLabel labelSelectFilePaciente1;
     private javax.swing.JLabel labelTerapistas;
-    private javax.swing.JLabel labelTerapistas1;
     private javax.swing.JLabel labelVerInformación;
     private javax.swing.JLabel labelVerReporte;
     private javax.swing.JList<String> listCondiciones;
@@ -2454,6 +2606,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JPanel panel4;
     private javax.swing.JPanel panel5;
     private javax.swing.JPanel panelActions;
+    private javax.swing.JPanel panelAutor;
     private javax.swing.JPanel panelContenedor;
     private javax.swing.JPanel panelFiltro;
     private javax.swing.JPanel panelHerramientas;
@@ -2461,7 +2614,6 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JPanel panelNuevoPaciente;
     private javax.swing.JPanel panelPacientes;
     private javax.swing.JPanel panelTerapistas;
-    private javax.swing.JPanel panelTerapistas1;
     private javax.swing.JRadioButton radio100;
     private javax.swing.JRadioButton radio100cambiar;
     private javax.swing.JRadioButton radio50;
@@ -2674,15 +2826,6 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
             r += "\n\n";
         }
         return r;
-    }
-
-    private void verSobre() {
-        String about = """
-                       Autor: Luis Baquiax
-                       Estudiante: Ingenieía en Ciencias y Sistemas
-                       CUNOC-XELA
-                       """;
-        JOptionPane.showMessageDialog(null, about);
     }
 
     private void limpiarCamposNuevoPaciente() {

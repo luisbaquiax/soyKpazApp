@@ -166,18 +166,25 @@ public class WinReport extends javax.swing.JFrame {
                     contenido(txtArea.getText()).
                     fecha(auxiText.getText()).
                     build();
-            if (controlDatos.getReporteDB().insert(reporte)) {
+            if (txtArea.getText().length() > 250) {
                 JOptionPane.showMessageDialog(null,
-                        "Se guardó el reporte correctamente.",
-                        "INFORMACION GUARDADA",
-                        JOptionPane.INFORMATION_MESSAGE);
-
-            } else {
-                JOptionPane.showMessageDialog(null,
-                        "No pudimos guardar los cambios, lo sentimos.",
+                        "El reporte debe tener solo 250 carácteres.",
                         "NO SE GURADÓ LA INFORMACIÓN",
                         JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                if (controlDatos.getReporteDB().insert(reporte)) {
+                    JOptionPane.showMessageDialog(null,
+                            "Se guardó el reporte correctamente.",
+                            "INFORMACION GUARDADA",
+                            JOptionPane.INFORMATION_MESSAGE);
 
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "No pudimos guardar los cambios, lo sentimos.",
+                            "NO SE GURADÓ LA INFORMACIÓN",
+                            JOptionPane.INFORMATION_MESSAGE);
+
+                }
             }
 //            this.setVisible(false);
 //            this.windowSoyKpaz.setVisible(true);

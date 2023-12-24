@@ -33,6 +33,12 @@ public class Utiles {
         button.setIcon(new ImageIcon(icono1.getImage().getScaledInstance(tam,
                 tam, Image.SCALE_SMOOTH)));
     }
+    
+     public void ponerIconoButton(JButton button, String ruta) {
+        ImageIcon icono1 = new ImageIcon(getClass().getResource(ruta));
+        button.setIcon(new ImageIcon(icono1.getImage().getScaledInstance(button.getSize().width,
+                button.getSize().height, Image.SCALE_SMOOTH)));
+    }
 
     /**
      * SE DEBE TENER UNA CARPETA LLAMADA << RESOURCER >> AL MISMO NIVEL QUE LA

@@ -91,46 +91,80 @@ public class ReportePDF {
             document.add(paragraph);
             // Utilización de PdfPTable
             // Usamos varios elementos para añadir título y subtítulo
-            Paragraph pa = new Paragraph("Nombre: " + paciente.getNombre(), fontdata);
+//            Paragraph pa = new Paragraph("Nombre: " + paciente.getNombre(), fontdata);
+////            pa.setTabSettings(new TabSettings(56f));
+//           
+//            pa.add(Chunk.TABBING);
+//            pa.add(new Chunk("Fecha de nacimiento: " + paciente.getFechaNacimiento()));
+//
 //            pa.setTabSettings(new TabSettings(56f));
-            TabSettings tas = new TabSettings();
-            List<TabStop> list = new ArrayList<>();
-            list.add(new TabStop(56f));
-            list.add(new TabStop(56f));
-            list.add(new TabStop(56f));
-            list.add(new TabStop(56f));
-            pa.setTabSettings(tas);
-            pa.add(Chunk.TABBING);
-            pa.add(new Chunk("Fecha de nacimiento: " + paciente.getFechaNacimiento()));
+//            pa.add(Chunk.TABBING);
+//            pa.add(new Chunk("Edad: " + paciente.getEdad()));
+//
+//            document.add(pa);
+//            //agregando
+//            Paragraph pa2 = new Paragraph("Encargado: " + encargado.getNombre(), fontdata);
+//            pa2.setTabSettings(new TabSettings(56f));
+//            pa2.add(Chunk.TABBING);
+//            pa2.add(new Chunk("Dirección: " + encargado.getDireccion()));
+//
+//            pa2.setTabSettings(new TabSettings(56f));
+//            pa2.add(Chunk.TABBING);
+//            pa2.add(new Chunk("Teléfono: " + encargado.getTelefono()));
+//
+//            document.add(pa2);
+//            //
+//            Paragraph pa3 = new Paragraph("Terapista: " + pacienteInfo.getTerapista(), fontdata);
+//            pa3.setTabSettings(new TabSettings(56f));
+//            pa3.add(Chunk.TABBING);
+//            pa3.add(new Chunk("Horario: " + paciente.getHorario()));
+//            document.add(pa3);
+//
+//            Paragraph pa4 = new Paragraph("Terapia: " + paciente.getTerapia(), fontdata);
+//            pa4.setTabSettings(new TabSettings(56f));
+//            pa4.add(Chunk.TABBING);
+//            pa4.add(new Chunk("Enfermedad crónica: " + paciente.getEnfermedadCronica()));
+//            document.add(pa4);
+            // We create the table (Creamos la tabla).
+            PdfPTable tableInfo = new PdfPTable(2);
+            tableInfo.setWidths(new float[]{3f, 3f});
+            // Ahora llenamos la tabla del PDF
+            PdfPCell cel;
+            // agregamos filas               
+            cel = new PdfPCell();
+            cel.setBackgroundColor(BaseColor.WHITE);
+            cel.setBorderColor(BaseColor.WHITE);
+            cel.setPadding(3f);
 
-            pa.setTabSettings(new TabSettings(56f));
-            pa.add(Chunk.TABBING);
-            pa.add(new Chunk("Edad: " + paciente.getEdad()));
+            cel.setPhrase(new Phrase("Nombre: " + paciente.getNombre(), fontdata));
+            tableInfo.addCell(cel);
 
-            document.add(pa);
-            //agregando
-            Paragraph pa2 = new Paragraph("Encargado: " + encargado.getNombre(), fontdata);
-            pa2.setTabSettings(new TabSettings(56f));
-            pa2.add(Chunk.TABBING);
-            pa2.add(new Chunk("Dirección: " + encargado.getDireccion()));
+            cel.setPhrase(new Phrase("Fecha de nacimiento: " + paciente.getFechaNacimiento(), fontdata));
+            tableInfo.addCell(cel);
 
-            pa2.setTabSettings(new TabSettings(56f));
-            pa2.add(Chunk.TABBING);
-            pa2.add(new Chunk("Teléfono: " + encargado.getTelefono()));
+            tableInfo.setHeaderRows(1);
 
-            document.add(pa2);
-            //
-            Paragraph pa3 = new Paragraph("Terapista: " + pacienteInfo.getTerapista(), fontdata);
-            pa3.setTabSettings(new TabSettings(56f));
-            pa3.add(Chunk.TABBING);
-            pa3.add(new Chunk("Horario: " + paciente.getHorario()));
-            document.add(pa3);
+            cel.setPhrase(new Phrase("Dirección: " + encargado.getDireccion(), fontdata));
+            tableInfo.addCell(cel);
+            cel.setPhrase(new Phrase("Edad: " + paciente.getEdad(), fontdata));
+            tableInfo.addCell(cel);
 
-            Paragraph pa4 = new Paragraph("Terapia: " + paciente.getTerapia(), fontdata);
-            pa4.setTabSettings(new TabSettings(56f));
-            pa4.add(Chunk.TABBING);
-            pa4.add(new Chunk("Enfermedad crónica: " + paciente.getEnfermedadCronica()));
-            document.add(pa4);
+            cel.setPhrase(new Phrase("Encargado: " + encargado.getNombre(), fontdata));
+            tableInfo.addCell(cel);
+            cel.setPhrase(new Phrase("Teléfono: " + encargado.getTelefono(), fontdata));
+            tableInfo.addCell(cel);
+
+            cel.setPhrase(new Phrase("Terapista: " + pacienteInfo.getTerapista(), fontdata));
+            tableInfo.addCell(cel);
+            cel.setPhrase(new Phrase("Terapia: " + paciente.getTerapia(), fontdata));
+            tableInfo.addCell(cel);
+
+            cel.setPhrase(new Phrase("Enfermedad crónica: " + paciente.getEnfermedadCronica(), fontdata));
+            tableInfo.addCell(cel);
+            cel.setPhrase(new Phrase("Horario: " + paciente.getHorario(), fontdata));
+            tableInfo.addCell(cel);
+
+            document.add(tableInfo);
 
             //salto de linea
             document.add(new Paragraph("\n"));
