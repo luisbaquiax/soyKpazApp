@@ -36,10 +36,10 @@ public class PacienteDB {
                 dpi_terapista,
                 tipo_archivo,
                 terapia,
-                archivo,
                 horario,
                 condicion,
-                activo) 
+                activo,
+                archivo) 
               values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
               """;
 
@@ -124,7 +124,7 @@ public class PacienteDB {
             statement.setBoolean(13, paciente.isActivo());
 
             InputStream in = new ByteArrayInputStream(paciente.getFileBytes());
-            statement.setBlob(11, in);
+            statement.setBlob(14, in);
 
             statement.executeUpdate();
             statement.close();

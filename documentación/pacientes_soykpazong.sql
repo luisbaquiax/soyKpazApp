@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS condicion(
 );
 
 CREATE TABLE IF NOT EXISTS paciente(
-    carne INT AUTO_INCREMENT NULL,
+    carne INT AUTO_INCREMENT NOT NULL,
     nombre VARCHAR(45) NOT NULL,
     fecha_nacimiento DATE NOT NULL,
     edad INT,

@@ -158,8 +158,8 @@ public class CambioCondicion extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.setVisible(false);
         this.win.setVisible(true);
-        this.win.llenarTablaPacientes(controlDatos.getPacienteInfoDB().getPacientes());
-        this.win.getJTabbedPane1().setSelectedIndex(1);
+        this.win.llenarTablaPacientes(controlDatos.getPacienteInfoDB().getPacientes(true));
+        this.win.getjTabbedPane1().setSelectedIndex(1);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

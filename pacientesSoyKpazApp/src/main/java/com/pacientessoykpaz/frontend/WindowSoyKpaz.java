@@ -33,6 +33,7 @@ import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -43,7 +44,6 @@ import lombok.Data;
  *
  * @author Luis
  */
-@Data
 public class WindowSoyKpaz extends javax.swing.JFrame {
 
     private Utiles utiles;
@@ -93,7 +93,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         group3.add(radio50cambiar);
         group3.add(radioNoBecadoCambiar);
 
-        this.listPacientes = this.controlDatos.getPacienteInfoDB().getPacientes();
+        this.listPacientes = this.controlDatos.getPacienteInfoDB().getPacientes(true);
 
         this.listReport = new ArrayList<>();
         /**
@@ -198,9 +198,9 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tablePacientes = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnAllPacientes = new javax.swing.JButton();
+        btnAtivesPacientes = new javax.swing.JButton();
+        btnDesactivePacientes = new javax.swing.JButton();
         panelActions = new javax.swing.JPanel();
         labelVerReporte = new javax.swing.JLabel();
         labelVerInformación = new javax.swing.JLabel();
@@ -941,14 +941,29 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
 
         jPanel2.setLayout(new java.awt.GridLayout());
 
-        jButton1.setText("Ver todos");
-        jPanel2.add(jButton1);
+        btnAllPacientes.setText("Ver todos");
+        btnAllPacientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAllPacientesActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnAllPacientes);
 
-        jButton2.setText("Ver solo activos");
-        jPanel2.add(jButton2);
+        btnAtivesPacientes.setText("Ver solo activos");
+        btnAtivesPacientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtivesPacientesActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnAtivesPacientes);
 
-        jButton4.setText("Ver no activos");
-        jPanel2.add(jButton4);
+        btnDesactivePacientes.setText("Ver no activos");
+        btnDesactivePacientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDesactivePacientesActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnDesactivePacientes);
 
         panelActions.setMinimumSize(new java.awt.Dimension(258, 28));
         panelActions.setPreferredSize(new java.awt.Dimension(622, 36));
@@ -1810,6 +1825,9 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                         InputStream in = new FileInputStream(rutadpiPaciente);
                         byte[] bytesArray = in.readAllBytes();
                         nuevoPaciente.setFileBytes(bytesArray);
+                        File file = new File(rutadpiPaciente);
+                        String tipo = file.getName().substring(file.getName().lastIndexOf(".") + 1);
+                        nuevoPaciente.setTipoArchivo(tipo);
                         pacienteConArchivo = true;
                     } catch (IOException ex) {
                         Logger.getLogger(WindowSoyKpaz.class.getName()).log(Level.SEVERE, null, ex);
@@ -1844,23 +1862,17 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                             "SELECCIONAR PROGRAMA",
                             JOptionPane.INFORMATION_MESSAGE);
                 }
+                listPacientes = controlDatos.getPacienteInfoDB().getPacientes(true);
+                limpiarCamposNuevoPaciente();
             }
         }
         llenarCondiciones(listCondiciones);
+
     }//GEN-LAST:event_btnSaveDataActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
         // TODO add your handling code here:
-        txtCarne.setText("");
-        txtAge.setText("");
-        txtDireccion.setText("");
-        txtDpiEncargado.setText("");
-        txtEnfermedad.setText("");
-        txtName.setText("");
-        txtNameEncargado.setText("");
-        txtOtraCondición.setText("");
-        txtTelefono.setText("");
-        this.encargadoAuxi = null;
+        limpiarCamposNuevoPaciente();
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void checkHablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkHablaActionPerformed
@@ -1900,7 +1912,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private void panelPacientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelPacientesMouseClicked
         // TODO add your handling code here:
         jTabbedPane1.setSelectedIndex(1);
-        listPacientes = controlDatos.getPacienteInfoDB().getPacientes();
+        listPacientes = controlDatos.getPacienteInfoDB().getPacientes(true);
         llenarTablaPacientes(listPacientes);
         tablePacientes.requestFocus();
     }//GEN-LAST:event_panelPacientesMouseClicked
@@ -1908,7 +1920,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private void labelPacientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelPacientesMouseClicked
         // TODO add your handling code here:
         jTabbedPane1.setSelectedIndex(1);
-        listPacientes = controlDatos.getPacienteInfoDB().getPacientes();
+        listPacientes = controlDatos.getPacienteInfoDB().getPacientes(true);
         llenarTablaPacientes(listPacientes);
         tablePacientes.requestFocus();
     }//GEN-LAST:event_labelPacientesMouseClicked
@@ -1960,13 +1972,13 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
 
     private void txtSearchByEncargadoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchByEncargadoKeyReleased
         // TODO add your handling code here:
-        listPacientes = controlDatos.getPacienteInfoDB().getPacientes(txtSearchByEncargado.getText());
+        listPacientes = controlDatos.getPacienteInfoDB().getPacientes(txtSearchByEncargado.getText(), true);
         llenarTablaPacientes(listPacientes);
     }//GEN-LAST:event_txtSearchByEncargadoKeyReleased
 
     private void txtSearchCarneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchCarneKeyReleased
         // TODO add your handling code here:
-        listPacientes = controlDatos.getPacienteInfoDB().getPacientesbyCarne(txtSearchCarne.getText());
+        listPacientes = controlDatos.getPacienteInfoDB().getPacientesbyCarne(txtSearchCarne.getText(), true);
         llenarTablaPacientes(listPacientes);
     }//GEN-LAST:event_txtSearchCarneKeyReleased
 
@@ -2297,7 +2309,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                 }
             }
         }
-        listPacientes = controlDatos.getPacienteInfoDB().getPacientes();
+        listPacientes = controlDatos.getPacienteInfoDB().getPacientes(true);
         llenarTablaPacientes(listPacientes);
         //reiniciar valores
         this.rutadpiPaciente = "";
@@ -2333,17 +2345,38 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                     pacienteInfo);
             paciente.setActivo(false);
             controlDatos.actualizarPaciente(paciente);
-            listPacientes = controlDatos.getPacienteInfoDB().getPacientes();
+            listPacientes = controlDatos.getPacienteInfoDB().getPacientes(true);
             llenarTablaPacientes(listPacientes);
         }
     }//GEN-LAST:event_labelDesactivarMouseClicked
 
+    private void btnAllPacientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAllPacientesActionPerformed
+        // TODO add your handling code here:
+        listPacientes = controlDatos.getPacienteInfoDB().getPacientes();
+        llenarTablaPacientes(listPacientes);
+    }//GEN-LAST:event_btnAllPacientesActionPerformed
+
+    private void btnAtivesPacientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtivesPacientesActionPerformed
+        // TODO add your handling code here:
+        listPacientes = controlDatos.getPacienteInfoDB().getPacientes(true);
+        llenarTablaPacientes(listPacientes);
+    }//GEN-LAST:event_btnAtivesPacientesActionPerformed
+
+    private void btnDesactivePacientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDesactivePacientesActionPerformed
+        // TODO add your handling code here:
+        listPacientes = controlDatos.getPacienteInfoDB().getPacientes(false);
+        llenarTablaPacientes(listPacientes);
+    }//GEN-LAST:event_btnDesactivePacientesActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAllPacientes;
+    private javax.swing.JButton btnAtivesPacientes;
     private javax.swing.JButton btnCambiarCondicion;
     private javax.swing.JButton btnChangeTerapista;
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnClearTerapista;
+    private javax.swing.JButton btnDesactivePacientes;
     private javax.swing.JButton btnGuardarCambios;
     private javax.swing.JButton btnPDF;
     private javax.swing.JButton btnSaveData;
@@ -2358,10 +2391,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> comboTerapistas;
     private com.toedter.calendar.JDateChooser dateChooser;
     private com.toedter.calendar.JDateChooser dateChooser1;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
@@ -2496,6 +2526,12 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == 10) {
                     if (e.getComponent().equals(txtCarne)) {
+                        if (listPacientes.isEmpty()) {
+                            txtCarne.setText("1");
+                        } else {
+                            int id = Integer.parseInt(listPacientes.get(listPacientes.size() - 1).getCarne()) + 1;
+                            txtCarne.setText(id + "");
+                        }
                         txtName.requestFocus();
                     } else if (e.getComponent().equals(txtName)) {
                         dateChooser.requestFocus();
@@ -2648,4 +2684,32 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                        """;
         JOptionPane.showMessageDialog(null, about);
     }
+
+    private void limpiarCamposNuevoPaciente() {
+        txtCarne.setText("");
+        txtAge.setText("");
+        txtDireccion.setText("");
+        txtDpiEncargado.setText("");
+        txtEnfermedad.setText("");
+        txtName.setText("");
+        txtNameEncargado.setText("");
+        txtOtraCondición.setText("");
+        txtTelefono.setText("");
+        radio100.setSelected(false);
+        radio50.setSelected(false);
+        radioNoBecado.setSelected(false);
+        checkHabla.setSelected(false);
+        checkOcupacional.setSelected(false);
+        checkPsicologico.setSelected(false);
+        txtHorario.setText("");
+        radioIngresos1.setSelected(false);
+        radioIngresos2.setSelected(false);
+        radioIngresos3.setSelected(false);
+        this.encargadoAuxi = null;
+    }
+
+    public JTabbedPane getjTabbedPane1() {
+        return jTabbedPane1;
+    }
+
 }
