@@ -17,7 +17,6 @@ com\pacientessoykpaz\frontend\WindowSoyKpaz$35.class
 com\pacientessoykpaz\backend\entidad\Terapia.class
 com\pacientessoykpaz\util\Utiles.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$32.class
-com\pacientessoykpaz\backend\entidad\CondicionPaciente$CondicionPacienteBuilder.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$19.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$12.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$27.class
@@ -25,8 +24,10 @@ com\pacientessoykpaz\backend\database\coneccion\ConeccionDB.class
 com\pacientessoykpaz\frontend\WinReport$3.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$7.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$16.class
+com\pacientessoykpaz\frontend\WindowSoyKpaz$36.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$24.class
 com\pacientessoykpaz\backend\entidad\Condicion$CondicionBuilder.class
+com\pacientessoykpaz\frontend\CambioCondicion$1.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$21.class
 com\pacientessoykpaz\backend\database\model\EncargadoDB.class
 com\pacientessoykpaz\backend\database\model\PacienteDB.class
@@ -34,8 +35,8 @@ com\pacientessoykpaz\frontend\WindowSoyKpaz$4.class
 com\pacientessoykpaz\frontend\WinReport$2.class
 com\pacientessoykpaz\backend\database\model\ReporteDB.class
 com\pacientessoykpaz\backend\entidad\Condicion.class
+com\pacientessoykpaz\frontend\CambioCondicion.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$23.class
-com\pacientessoykpaz\backend\entidad\CondicionPaciente.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$1.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$13.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$33.class
@@ -55,10 +56,10 @@ com\pacientessoykpaz\backend\database\model\TerapistaDB.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$5.class
 com\pacientessoykpaz\backend\entidad\Aministrador.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$14.class
-com\pacientessoykpaz\backend\database\model\CondicionPacienteDB.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$17.class
 com\pacientessoykpaz\backend\entidad\Reporte.class
 com\pacientessoykpaz\backend\database\model\CondicionDB.class
+com\pacientessoykpaz\frontend\WindowSoyKpaz$37.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$26.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$34.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$2.class

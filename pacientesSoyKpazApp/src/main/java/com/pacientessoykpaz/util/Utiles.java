@@ -16,6 +16,18 @@ import javax.swing.JLabel;
  */
 public class Utiles {
 
+    public static final String INGRESOS_MAYOR_1000 = "Ingresos superiores a Q 1,000";
+    public static final String INGRESOS_MENOR_1000 = "Ingresos inferiores a Q 1,000";
+    public static final String NO_TIENE_INGRESOS_FIJOS = "No tiene ingresos fijos";
+
+    public static final String BECARIO_100 = "100 % becado";
+    public static final String BECARIO_50 = "50 % becado";
+    public static final String NO_BECADO = "No becado";
+    
+    public static final String OCUPACIONAL = "Ocupacional";
+    public static final String HABLA = "Habla";
+     public static final String PSICOLOGICA = "Psicológica";
+
     public void ponerIconoButton(JButton button, String ruta, int tam) {
         ImageIcon icono1 = new ImageIcon(getClass().getResource(ruta));
         button.setIcon(new ImageIcon(icono1.getImage().getScaledInstance(tam,

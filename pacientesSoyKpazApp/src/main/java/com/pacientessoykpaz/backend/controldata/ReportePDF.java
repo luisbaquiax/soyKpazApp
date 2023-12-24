@@ -7,17 +7,18 @@ package com.pacientessoykpaz.backend.controldata;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chapter;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Image;
-import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.TabSettings;
+import com.itextpdf.text.TabStop;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -30,6 +31,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,51 +68,73 @@ public class ReportePDF {
             }
             document.open();
             // Añadimos los metadatos del PDF
-            document.addTitle("REPORTE POR CADA BENEFICIARIO");
-            document.addSubject("Generando pdf");
-            document.addKeywords("Java, PDF, iText");
-            document.addAuthor("Luis Baquiax LBS");
-            document.addCreator("Luis Baquiax LBS");
+            addMetadata(document);
 
-            Chapter chapter = new Chapter(new Paragraph(""), 1);
-            chapter.setNumberDepth(0);
-            String espacio = "              ";
-            String content = espacio + "Carné: " + pacienteInfo.getCarne() + "\n";
-            content += espacio + "Nombre: " + pacienteInfo.getNombre()+ "\n";
-            content += espacio + "Fecha de nacimiento: " + pacienteInfo.getFecha()+ "\n";
-            content += espacio + "Edad: " + pacienteInfo.getEdad() + "\n";
-            content += espacio + "Encargado: " + pacienteInfo.getEcargado() + "\n";
-            content += espacio + "Teléfono: " + pacienteInfo.getTelefono() + "\n";
-            content += espacio + "Dirección: " + encargado.getDireccion() + "\n";
-            content += espacio + "Terapista: " + pacienteInfo.getTerapista() + "\n";
+            //document.setNumberDepth(0);
+            Font fontdata = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+            fontdata.setColor(BaseColor.BLACK);
 
-            String auxiTerapia = pacienteInfo.getTerapia().replaceAll(" ", ", ");
-
-            content += espacio + "Terapia: " + pacienteInfo.getTerapia() + "\n";
-            content += espacio + "Horario: " + pacienteInfo.getHorario() + "\n";
-            content += espacio + "Posee enfermedad crónica: " + paciente.getEnfermedadCronica()+ "\n";
-
-            String saltos = "\n";
-            content += saltos;
-            Paragraph parrafo = new Paragraph(content, paragraphFont);
-            chapter.add(parrafo);
             // agregamos el logo
             Image image;
             try {
-                image = Image.getInstance(getClass().getResource("/img/ong.png"));
-                image.setAbsolutePosition(480, 740);
-                image.scaleAbsoluteHeight(80f);
-                image.scaleAbsoluteWidth(80f);
-                chapter.add(image);
+                image = Image.getInstance(getClass().getResource("/img/header.jpeg"));
+                image.setAbsolutePosition(95, 720);
+                image.scaleAbsoluteHeight(95f);
+                image.scaleAbsoluteWidth(400f);
+                document.add(image);
             } catch (BadElementException ex) {
                 System.out.println("Image BadElementException" + ex);
             } catch (IOException ex) {
                 System.out.println("Image IOException " + ex);
             }
-            document.add(chapter);
+            Paragraph paragraph = new Paragraph("\n\n\n\n\n");
+            document.add(paragraph);
             // Utilización de PdfPTable
             // Usamos varios elementos para añadir título y subtítulo
+            Paragraph pa = new Paragraph("Nombre: " + paciente.getNombre(), fontdata);
+//            pa.setTabSettings(new TabSettings(56f));
+            TabSettings tas = new TabSettings();
+            List<TabStop> list = new ArrayList<>();
+            list.add(new TabStop(56f));
+            list.add(new TabStop(56f));
+            list.add(new TabStop(56f));
+            list.add(new TabStop(56f));
+            pa.setTabSettings(tas);
+            pa.add(Chunk.TABBING);
+            pa.add(new Chunk("Fecha de nacimiento: " + paciente.getFechaNacimiento()));
 
+            pa.setTabSettings(new TabSettings(56f));
+            pa.add(Chunk.TABBING);
+            pa.add(new Chunk("Edad: " + paciente.getEdad()));
+
+            document.add(pa);
+            //agregando
+            Paragraph pa2 = new Paragraph("Encargado: " + encargado.getNombre(), fontdata);
+            pa2.setTabSettings(new TabSettings(56f));
+            pa2.add(Chunk.TABBING);
+            pa2.add(new Chunk("Dirección: " + encargado.getDireccion()));
+
+            pa2.setTabSettings(new TabSettings(56f));
+            pa2.add(Chunk.TABBING);
+            pa2.add(new Chunk("Teléfono: " + encargado.getTelefono()));
+
+            document.add(pa2);
+            //
+            Paragraph pa3 = new Paragraph("Terapista: " + pacienteInfo.getTerapista(), fontdata);
+            pa3.setTabSettings(new TabSettings(56f));
+            pa3.add(Chunk.TABBING);
+            pa3.add(new Chunk("Horario: " + paciente.getHorario()));
+            document.add(pa3);
+
+            Paragraph pa4 = new Paragraph("Terapia: " + paciente.getTerapia(), fontdata);
+            pa4.setTabSettings(new TabSettings(56f));
+            pa4.add(Chunk.TABBING);
+            pa4.add(new Chunk("Enfermedad crónica: " + paciente.getEnfermedadCronica()));
+            document.add(pa4);
+
+            //salto de linea
+            document.add(new Paragraph("\n"));
+            //
             Integer numColumns = 3;
             // We create the table (Creamos la tabla).
             PdfPTable table = new PdfPTable(numColumns);
@@ -118,14 +142,14 @@ public class ReportePDF {
             // Ahora llenamos la tabla del PDF
             PdfPCell columnHeader;
             // agregamos filas               
-            columnHeader = new PdfPCell(new Phrase("No. "));
+            columnHeader = new PdfPCell();
             columnHeader.setBackgroundColor(BaseColor.DARK_GRAY);
             columnHeader.setPadding(3f);
 
             Font font = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
             font.setColor(BaseColor.WHITE);
 
-            columnHeader.setPhrase(new Phrase("NO", font));
+            columnHeader.setPhrase(new Phrase("#", font));
             columnHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(columnHeader);
             columnHeader.setPhrase(new Phrase("FECHA", font));
@@ -140,7 +164,7 @@ public class ReportePDF {
             for (int i = 0; i < listReports.size(); i++) {
                 table.addCell((i + 1) + "");
                 table.addCell(listReports.get(i).getFecha());
-                 table.addCell(listReports.get(i).getContenido());
+                table.addCell(listReports.get(i).getContenido());
             }
 
             //agregamos la tabla al documento
@@ -154,6 +178,14 @@ public class ReportePDF {
         } catch (IOException ex) {
             Logger.getLogger(ReportePDF.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private void addMetadata(Document document) {
+        document.addTitle("REPORTE POR CADA BENEFICIARIO");
+        document.addSubject("Generando pdf");
+        document.addKeywords("Java, PDF, iText");
+        document.addAuthor("Luis Baquiax LBS");
+        document.addCreator("Luis Baquiax LBS");
     }
 
 }
