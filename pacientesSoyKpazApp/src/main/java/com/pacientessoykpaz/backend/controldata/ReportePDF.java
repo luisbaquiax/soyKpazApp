@@ -177,7 +177,8 @@ public class ReportePDF {
             PdfPCell columnHeader;
             // agregamos filas               
             columnHeader = new PdfPCell();
-            columnHeader.setBackgroundColor(BaseColor.DARK_GRAY);
+//            columnHeader.setBackgroundColor(BaseColor.DARK_GRAY);
+            columnHeader.setBackgroundColor(new BaseColor(70, 84, 89));
             columnHeader.setPadding(3f);
 
             Font font = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
