@@ -175,7 +175,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         radio50 = new javax.swing.JRadioButton();
         radioNoBecado = new javax.swing.JRadioButton();
         labelSelectFilePaciente = new javax.swing.JLabel();
-        txtrutadpibeneficiario = new javax.swing.JTextField();
+        txtPathDocuments = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -567,6 +567,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         );
 
         jTabbedPane1.setBackground(new java.awt.Color(255, 255, 255));
+        jTabbedPane1.setEnabled(false);
 
         panel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -628,7 +629,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
             }
         });
 
-        txtrutadpibeneficiario.setBorder(javax.swing.BorderFactory.createTitledBorder("Archivo seleccionado"));
+        txtPathDocuments.setBorder(javax.swing.BorderFactory.createTitledBorder("Archivo seleccionado"));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -648,7 +649,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                         .addGap(12, 12, 12)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(labelSelectFilePaciente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtrutadpibeneficiario, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtPathDocuments, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel15)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -674,7 +675,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addComponent(labelSelectFilePaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtrutadpibeneficiario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtPathDocuments, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -2080,7 +2081,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         this.rutadpiPaciente = rutas.pathChoserOpen(null);
         if (!rutadpiPaciente.equals("")) {
             File f = new File(rutadpiPaciente);
-            txtrutadpibeneficiario.setText(f.getName());
+            txtPathDocuments.setText(f.getName());
         }
     }//GEN-LAST:event_labelSelectFilePacienteMouseClicked
 
@@ -2438,15 +2439,23 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
 
     private void labelDesactivarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelDesactivarMouseClicked
         // TODO add your handling code here:
-        if (tablePacientes.getSelectedRow() >= 0) {
-            this.pacienteInfo = listPacientes.get(tablePacientes.getSelectedRow());
-            Paciente paciente = controlDatos.getPacientePorCarne(
-                    controlDatos.getPacienteDB().getPacientes(),
-                    pacienteInfo);
-            paciente.setActivo(false);
-            controlDatos.actualizarPaciente(paciente);
-            listPacientes = controlDatos.getPacienteInfoDB().getPacientes(true);
-            llenarTablaPacientes(listPacientes);
+        int opcion = (int) JOptionPane.showInternalConfirmDialog(
+                null,
+                "¿Desea cancelar al paciente?",
+                "QUITAR AL PACIENTE DE LOS REGISTROS",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE);
+        if (opcion == 0) {
+            if (tablePacientes.getSelectedRow() >= 0) {
+                this.pacienteInfo = listPacientes.get(tablePacientes.getSelectedRow());
+                Paciente paciente = controlDatos.getPacientePorCarne(
+                        controlDatos.getPacienteDB().getPacientes(),
+                        pacienteInfo);
+                paciente.setActivo(false);
+                controlDatos.actualizarPaciente(paciente);
+                listPacientes = controlDatos.getPacienteInfoDB().getPacientes(true);
+                llenarTablaPacientes(listPacientes);
+            }
         }
     }//GEN-LAST:event_labelDesactivarMouseClicked
 
@@ -2652,6 +2661,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JTextField txtNombreTerapista;
     private javax.swing.JTextField txtOtraCondición;
     private javax.swing.JTextField txtOtraCondición1;
+    private javax.swing.JTextField txtPathDocuments;
     private javax.swing.JTextField txtSearchByEncargado;
     private javax.swing.JTextField txtSearchCarne;
     private javax.swing.JTextField txtTelefono;
@@ -2659,7 +2669,6 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JTextField txtTerapiaCambio;
     private javax.swing.JTextField txtTerapistaInfoCambio;
     private javax.swing.JTextField txtdpiTerapista;
-    private javax.swing.JTextField txtrutadpibeneficiario;
     // End of variables declaration//GEN-END:variables
 
     private void establecerFocus() {
@@ -2848,6 +2857,9 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         radioIngresos1.setSelected(false);
         radioIngresos2.setSelected(false);
         radioIngresos3.setSelected(false);
+        txtPathDocuments.setText("");
+        JTextField fecha = (JTextField) dateChooser.getDateEditor().getUiComponent();
+        fecha.setText("");
         this.encargadoAuxi = null;
     }
 

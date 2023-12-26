@@ -377,6 +377,7 @@
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
@@ -480,7 +481,7 @@
                                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                           <Component id="labelSelectFilePaciente" max="32767" attributes="0"/>
-                                          <Component id="txtrutadpibeneficiario" min="-2" pref="178" max="-2" attributes="0"/>
+                                          <Component id="txtPathDocuments" min="-2" pref="178" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
@@ -514,7 +515,7 @@
                                   <Group type="102" alignment="1" attributes="0">
                                       <Component id="labelSelectFilePaciente" min="-2" pref="26" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                                      <Component id="txtrutadpibeneficiario" min="-2" max="-2" attributes="0"/>
+                                      <Component id="txtPathDocuments" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace type="unrelated" max="32767" attributes="0"/>
@@ -613,7 +614,7 @@
                         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="labelSelectFilePacienteMouseClicked"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="txtrutadpibeneficiario">
+                    <Component class="javax.swing.JTextField" name="txtPathDocuments">
                       <Properties>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
