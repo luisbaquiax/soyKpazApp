@@ -111,6 +111,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         utiles.setIconLabel(labelDesactivar, "/img/desactivar.png", TAM);
         utiles.ponerIconoButton(btnSearchReportFecha, "/img/search.png", TAM);
         utiles.ponerIconoButton(btnPDF, "/img/pdf.png", TAM);
+        utiles.ponerIconoButton(btnDownloadDocs, "/img/down.png", 20);
         int tam2 = 60;
         utiles.ponerIconoButton(btnlovePDF, "/img/lovepdf.png", tam2);
         utiles.ponerIconoButton(btnUrlJoinPDF, "/img/join.png", tam2);
@@ -246,6 +247,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         radioNoBecadoCambiar = new javax.swing.JRadioButton();
         labelChangeFile = new javax.swing.JLabel();
         txtAge2 = new javax.swing.JTextField();
+        btnDownloadDocs = new javax.swing.JButton();
         jPanel18 = new javax.swing.JPanel();
         jLabel25 = new javax.swing.JLabel();
         txtOtraCondición1 = new javax.swing.JTextField();
@@ -1253,6 +1255,15 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
             }
         });
         jPanel17.add(txtAge2, new org.netbeans.lib.awtextra.AbsoluteConstraints(371, 69, 100, -1));
+
+        btnDownloadDocs.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnDownloadDocs.setText("Descargar");
+        btnDownloadDocs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDownloadDocsActionPerformed(evt);
+            }
+        });
+        jPanel17.add(btnDownloadDocs, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 100, 130, -1));
 
         jPanel18.setBackground(new java.awt.Color(255, 255, 255));
         jPanel18.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Condición y alguna enfermedad crónica", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
@@ -2523,6 +2534,23 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnUrlConvertImgeToPDFActionPerformed
 
+    private void btnDownloadDocsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDownloadDocsActionPerformed
+        // TODO add your handling code here:
+        if (pacienteCambio != null) {
+            System.out.println("paciente cambio " + pacienteCambio.toString());
+            if (pacienteCambio.getFileBytes() != null) {
+                String ruta = rutas.pathChoserSave(null);
+                if (!ruta.equals("")) {
+                    controlDatos.descargarDocumentos(pacienteCambio.getFileBytes(),
+                            ruta,
+                            pacienteCambio.getTipoArchivo());
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "El paciente no tiene documentos", "SIN DOCUMENTOS SUBIDOS", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnDownloadDocsActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAllPacientes;
@@ -2532,6 +2560,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnClearTerapista;
     private javax.swing.JButton btnDesactivePacientes;
+    private javax.swing.JButton btnDownloadDocs;
     private javax.swing.JButton btnGuardarCambios;
     private javax.swing.JButton btnPDF;
     private javax.swing.JButton btnSaveData;

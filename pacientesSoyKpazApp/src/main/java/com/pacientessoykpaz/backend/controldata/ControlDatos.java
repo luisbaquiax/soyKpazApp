@@ -9,7 +9,14 @@ import com.pacientessoykpaz.backend.entidad.Condicion;
 import com.pacientessoykpaz.backend.entidad.Encargado;
 import com.pacientessoykpaz.backend.entidad.Paciente;
 import com.pacientessoykpaz.backend.entidad.PacienteInfo;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import lombok.Data;
 
@@ -83,5 +90,24 @@ public class ControlDatos {
             }
         }
         return null;
+    }
+
+    public void descargarDocumentos(byte[] arraysBytes, String path, String tipoArchivo) {
+        FileOutputStream outPutStream = null;
+        try {
+            outPutStream = new FileOutputStream(path + "." + tipoArchivo);
+            outPutStream.write(arraysBytes);
+            Desktop.getDesktop().open(new File(path + "." + tipoArchivo));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ControlDatos.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ControlDatos.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                outPutStream.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ControlDatos.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }
