@@ -28,4 +28,5 @@ public class PacienteInfo {
     String terapista;
     String ecargado;
     String telefono;
+    String horario;
 }

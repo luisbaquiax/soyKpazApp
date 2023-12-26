@@ -6,6 +6,11 @@ package com.pacientessoykpaz.backend.controldata;
 
 import com.pacientessoykpaz.backend.database.model.*;
 import com.pacientessoykpaz.backend.entidad.Condicion;
+import com.pacientessoykpaz.backend.entidad.Encargado;
+import com.pacientessoykpaz.backend.entidad.Paciente;
+import com.pacientessoykpaz.backend.entidad.PacienteInfo;
+import java.util.List;
+import javax.swing.JOptionPane;
 import lombok.Data;
 
 /**
@@ -20,7 +25,6 @@ public class ControlDatos {
     private EncargadoDB encargadoDB;
     private TerapistaDB terapistaDB;
     private FechaDB fechaDB;
-    private CondicionPacienteDB condicionPacienteDB;
     private PacienteInfoDB pacienteInfoDB;
     private ReporteDB reporteDB;
 
@@ -30,7 +34,6 @@ public class ControlDatos {
         this.encargadoDB = new EncargadoDB();
         this.terapistaDB = new TerapistaDB();
         this.fechaDB = new FechaDB();
-        this.condicionPacienteDB = new CondicionPacienteDB();
         this.pacienteInfoDB = new PacienteInfoDB();
         this.reporteDB = new ReporteDB();
     }
@@ -41,5 +44,44 @@ public class ControlDatos {
             list[i] = condicionDB.getCondiciones().get(i).getNombre();
         }
         return list;
+    }
+
+    public boolean actualizarPaciente(Paciente paciente) {
+        if (paciente.getFileBytes() == null) {
+            return pacienteDB.updateWithoutFile(paciente);
+        } else {
+            return pacienteDB.updateWithFile(paciente);
+        }
+    }
+
+    public boolean actualizarEncargado(Encargado encargado) {
+        if (encargado.getFileBytes() == null) {
+            return encargadoDB.updateWithoutFile(encargado);
+        } else {
+            return encargadoDB.updateWithFile(encargado);
+        }
+    }
+
+    public void mensajeOk() {
+        JOptionPane.showMessageDialog(null,
+                "Se ha guardado los datos correctamente.",
+                "GUARDANDO DATOS",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void mensajeNoOk() {
+        JOptionPane.showMessageDialog(null,
+                "No pudimos guardar los datos.",
+                "ERROR AL GUARDAR DATOS",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public Paciente getPacientePorCarne(List<Paciente> list, PacienteInfo pacienteInfo) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getCarne().equals(pacienteInfo.getCarne())) {
+                return list.get(i);
+            }
+        }
+        return null;
     }
 }

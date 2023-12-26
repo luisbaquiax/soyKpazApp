@@ -36,9 +36,32 @@ public class PacienteDB {
                 dpi_terapista,
                 tipo_archivo,
                 terapia,
+                horario,
+                condicion,
+                activo,
                 archivo) 
-              values(?,?,?,?,?,?,?,?,?,?,?)
+              values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
               """;
+
+    private static final String UPDATE_WHIT_FILE
+            = """
+              UPDATE paciente SET 
+                nombre=?, 
+                fecha_nacimiento=?, 
+                edad=?, 
+                dpi_encargado=?, 
+                tipo_programa=?, 
+                enfermedad_cronica=?, 
+                dpi_terapista=?, 
+                tipo_archivo=?, 
+                terapia=?, 
+                horario=?, 
+                condicion=?, 
+                activo=?, 
+                archivo=?
+              WHERE carne=?
+              """;
+
     private static final String INSERT_WHITOUT_FILE
             = """
               insert into paciente(
@@ -50,10 +73,31 @@ public class PacienteDB {
                 tipo_programa,
                 enfermedad_cronica,
                 dpi_terapista,
-                terapia) 
-              values(?,?,?,?,?,?,?,?,?)
+                terapia,
+                horario,
+                condicion,
+                activo) 
+              values(?,?,?,?,?,?,?,?,?,?,?,?)
               """;
-    private static final String SELECT = "SELECT * FROM paciente";
+    private static final String SELECT_ALL = "SELECT * FROM paciente";
+    private static final String SELECT_BY_ESTADO = "SELECT * FROM paciente WHERE activo = ?";
+
+    private static final String UPDATE_WHIT_OUT_FILE
+            = """
+              UPDATE paciente SET
+                nombre = ?,
+                fecha_nacimiento = ?,
+                edad = ?,
+                dpi_encargado = ?,
+                tipo_programa = ?,
+                enfermedad_cronica = ?,
+                dpi_terapista = ?,
+                terapia = ?,
+                horario = ?,
+                condicion = ?,
+                activo = ?
+              WHERE carne = ?
+              """;
 
     private PreparedStatement statement;
     private ResultSet resutSet;
@@ -76,9 +120,42 @@ public class PacienteDB {
             statement.setString(8, paciente.getDpiTerapista());
             statement.setString(9, paciente.getTipoArchivo());
             statement.setString(10, paciente.getTerapia());
+            statement.setString(11, paciente.getHorario());
+            statement.setString(12, paciente.getCondicion());
+            statement.setBoolean(13, paciente.isActivo());
 
             InputStream in = new ByteArrayInputStream(paciente.getFileBytes());
-            statement.setBlob(11, in);
+            statement.setBlob(14, in);
+
+            statement.executeUpdate();
+            statement.close();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(PacienteDB.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    public boolean updateWithFile(Paciente paciente) {
+        try {
+            statement = ConeccionDB.getConeccion().prepareStatement(UPDATE_WHIT_FILE);
+            statement.setString(1, paciente.getNombre());
+            statement.setString(2, paciente.getFechaNacimiento());
+            statement.setInt(3, paciente.getEdad());
+            statement.setString(4, paciente.getDpiEncargado());
+            statement.setString(5, paciente.getTipoPrograma());
+            statement.setString(6, paciente.getEnfermedadCronica());
+            statement.setString(7, paciente.getDpiTerapista());
+            statement.setString(8, paciente.getTipoArchivo());
+            statement.setString(9, paciente.getTerapia());
+            statement.setString(10, paciente.getHorario());
+            statement.setString(11, paciente.getCondicion());
+            statement.setBoolean(12, paciente.isActivo());
+
+            InputStream in = new ByteArrayInputStream(paciente.getFileBytes());
+            statement.setBlob(13, in);
+
+            statement.setString(14, paciente.getCarne());
 
             statement.executeUpdate();
             statement.close();
@@ -106,6 +183,10 @@ public class PacienteDB {
             statement.setString(7, paciente.getEnfermedadCronica());
             statement.setString(8, paciente.getDpiTerapista());
             statement.setString(9, paciente.getTerapia());
+            statement.setString(10, paciente.getHorario());
+            statement.setString(11, paciente.getCondicion());
+            statement.setBoolean(12, paciente.isActivo());
+
             statement.executeUpdate();
             statement.close();
             return true;
@@ -115,15 +196,68 @@ public class PacienteDB {
         }
     }
 
-    public boolean update(Paciente paciente) {
-        return false;
+    /**
+     *
+     * @param paciente
+     * @return
+     */
+    public boolean updateWithoutFile(Paciente paciente) {
+        try {
+            statement = ConeccionDB.getConeccion().prepareStatement(UPDATE_WHIT_OUT_FILE);
+            statement.setString(1, paciente.getNombre());
+            statement.setString(2, paciente.getFechaNacimiento());
+            statement.setInt(3, paciente.getEdad());
+            statement.setString(4, paciente.getDpiEncargado());
+            statement.setString(5, paciente.getTipoPrograma());
+            statement.setString(6, paciente.getEnfermedadCronica());
+            statement.setString(7, paciente.getDpiTerapista());
+            statement.setString(8, paciente.getTerapia());
+            statement.setString(9, paciente.getHorario());
+            statement.setString(10, paciente.getCondicion());
+            statement.setBoolean(11, paciente.isActivo());
+            statement.setString(12, paciente.getCarne());
+
+            statement.executeUpdate();
+            statement.close();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(PacienteDB.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Paciente> getPacientes() {
         List<Paciente> list = new ArrayList<>();
 
         try {
-            statement = ConeccionDB.getConeccion().prepareStatement(SELECT);
+            statement = ConeccionDB.getConeccion().prepareStatement(SELECT_ALL);
+            resutSet = statement.executeQuery();
+            while (resutSet.next()) {
+                list.add(get(resutSet));
+            }
+            resutSet.close();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(PacienteDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    /**
+     *
+     * @param activo
+     * @return
+     */
+    public List<Paciente> getPacientes(boolean activo) {
+        List<Paciente> list = new ArrayList<>();
+
+        try {
+            statement = ConeccionDB.getConeccion().prepareStatement(SELECT_BY_ESTADO);
+            statement.setBoolean(1, activo);
             resutSet = statement.executeQuery();
             while (resutSet.next()) {
                 list.add(get(resutSet));
@@ -139,8 +273,7 @@ public class PacienteDB {
     private Paciente get(ResultSet resultSet) throws SQLException {
 
         Blob blob = resultSet.getBlob("archivo");
-        byte[] byteArray = blob.getBytes(1, (int) blob.length());
-        return Paciente.builder().
+        Paciente paciente = Paciente.builder().
                 carne(resutSet.getString("carne")).
                 nombre(resutSet.getString("nombre")).
                 fechaNacimiento(resutSet.getString("fecha_nacimiento")).
@@ -149,9 +282,17 @@ public class PacienteDB {
                 tipoPrograma(resutSet.getString("tipo_programa")).
                 enfermedadCronica(resutSet.getString("enfermedad_cronica")).
                 dpiTerapista(resutSet.getString("dpi_terapista")).
-                tipoArchivo(resutSet.getString("tipo_documento")).
+                tipoArchivo(resutSet.getString("tipo_archivo")).
                 terapia(resultSet.getString("terapia")).
-                fileBytes(byteArray).
+                horario(resultSet.getString("horario")).
+                condicion(resultSet.getString("condicion")).
+                activo(resultSet.getBoolean("activo")).
                 build();
+        if (blob != null) {
+            byte[] byteArray = blob.getBytes(1, (int) blob.length());
+            paciente.setFileBytes(byteArray);
+        }
+
+        return paciente;
     }
 }

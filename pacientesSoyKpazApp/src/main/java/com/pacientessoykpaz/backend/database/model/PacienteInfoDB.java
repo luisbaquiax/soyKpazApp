@@ -23,7 +23,20 @@ public class PacienteInfoDB {
 
     private static final String SELECT
             = """
-             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia,
+             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia, p.horario,
+             t.nombre AS terapista, e.nombre AS encargado, e.telefono
+             FROM paciente p
+             INNER JOIN terapista t
+             ON t.dpi = p.dpi_terapista
+             INNER JOIN encargado e
+             ON e.dpi= p.dpi_encargado
+             WHERE p.activo = ?
+             ORDER BY p.carne 
+              """;
+
+    private static final String SELECT_ALL
+            = """
+             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia, p.horario,
              t.nombre AS terapista, e.nombre AS encargado, e.telefono
              FROM paciente p
              INNER JOIN terapista t
@@ -34,27 +47,27 @@ public class PacienteInfoDB {
               """;
     private static final String SELECT_BY_ENCARGADO
             = """
-             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia,
+             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia, p.horario,
              t.nombre AS terapista, e.nombre AS encargado, e.telefono
              FROM paciente p
              INNER JOIN terapista t
              ON t.dpi = p.dpi_terapista
              INNER JOIN encargado e
              ON e.dpi= p.dpi_encargado
-             WHERE e.dpi = ?
+             WHERE e.dpi = ? AND p.activo = ?
              ORDER BY p.carne
               """;
 
     private static final String SELECT_BY_CARNE
             = """
-             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia,
+             SELECT p.carne, p.nombre, p.fecha_nacimiento, p.edad, p.tipo_programa, p.terapia, p.horario,
              t.nombre AS terapista, e.nombre AS encargado, e.telefono
              FROM paciente p
              INNER JOIN terapista t
              ON t.dpi = p.dpi_terapista
              INNER JOIN encargado e
              ON e.dpi= p.dpi_encargado
-             WHERE p.carne = ?
+             WHERE p.carne = ? AND p.activo = ?
               """;
     private PreparedStatement statement;
     private ResultSet resultSet;
@@ -64,10 +77,28 @@ public class PacienteInfoDB {
      *
      * @return
      */
-    public List<PacienteInfo> getPacientes() {
+    public List<PacienteInfo> getPacientes(boolean activo) {
         List<PacienteInfo> list = new ArrayList<>();
         try {
             statement = ConeccionDB.getConeccion().prepareStatement(SELECT);
+            statement.setBoolean(1, activo);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(get(resultSet));
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(PacienteInfoDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+
+    }
+
+    public List<PacienteInfo> getPacientes() {
+        List<PacienteInfo> list = new ArrayList<>();
+        try {
+            statement = ConeccionDB.getConeccion().prepareStatement(SELECT_ALL);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 list.add(get(resultSet));
@@ -87,11 +118,12 @@ public class PacienteInfoDB {
      * @param dpiEncargado
      * @return
      */
-    public List<PacienteInfo> getPacientes(String dpiEncargado) {
+    public List<PacienteInfo> getPacientes(String dpiEncargado, boolean activo) {
         List<PacienteInfo> list = new ArrayList<>();
         try {
             statement = ConeccionDB.getConeccion().prepareStatement(SELECT_BY_ENCARGADO);
             statement.setString(1, dpiEncargado);
+            statement.setBoolean(2, activo);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 list.add(get(resultSet));
@@ -104,11 +136,12 @@ public class PacienteInfoDB {
         return list;
     }
 
-    public List<PacienteInfo> getPacientesbyCarne(String carne) {
+    public List<PacienteInfo> getPacientesbyCarne(String carne, boolean activo) {
         List<PacienteInfo> list = new ArrayList<>();
         try {
             statement = ConeccionDB.getConeccion().prepareStatement(SELECT_BY_CARNE);
             statement.setString(1, carne);
+            statement.setBoolean(2, activo);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 list.add(get(resultSet));
@@ -131,6 +164,7 @@ public class PacienteInfoDB {
                 resultSet.getString("terapia"),
                 resultSet.getString("terapista"),
                 resultSet.getString("encargado"),
-                resultSet.getString("telefono"));
+                resultSet.getString("telefono"),
+                resultSet.getString("horario"));
     }
 }

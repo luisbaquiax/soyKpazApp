@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS condicion(
 );
 
 CREATE TABLE IF NOT EXISTS paciente(
-    carne VARCHAR(15) NOT NULL,
+    carne INT AUTO_INCREMENT NOT NULL,
     nombre VARCHAR(45) NOT NULL,
     fecha_nacimiento DATE NOT NULL,
     edad INT,
@@ -33,18 +33,13 @@ CREATE TABLE IF NOT EXISTS paciente(
     dpi_terapista VARCHAR(15) NOT NULL,
     terapia VARCHAR(100),
     tipo_archivo VARCHAR(10),
-    archivo BLOB,
+    archivo LONGBLOB,
+    horario VARCHAR(100) NOT NULL,
+    condicion VARCHAR(100) NOT NULL,
+    activo BOOLEAN NOT NULL,
     PRIMARY KEY(carne),
     FOREIGN KEY(dpi_encargado) REFERENCES encargado(dpi),
     FOREIGN KEY(dpi_terapista) REFERENCES terapista(dpi)
-);
-
-CREATE TABLE IF NOT EXISTS condicion_paciente(
-    carne_paciente VARCHAR(15) NOT NULL,
-    nombre_condicion VARCHAR(45) NOT NULL,
-    PRIMARY KEY(carne_paciente, nombre_condicion),
-    FOREIGN KEY(carne_paciente) REFERENCES paciente(carne) ON UPDATE CASCADE,
-    FOREIGN KEY(nombre_condicion) REFERENCES condicion(nombre) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS reporte(

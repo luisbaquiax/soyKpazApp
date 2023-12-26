@@ -33,15 +33,37 @@ public class EncargadoDB {
                                          archivo) 
                                          VALUES(?,?,?,?,?,?,?)
                                          """;
-    private static final String INSERT_WITHOUT_FILE = """
-                                         INSERT INTO encargado(
-                                         dpi,
-                                         nombre,
-                                         telefono,
-                                         direccion,
-                                         condicion_economica)
-                                         VALUES(?,?,?,?,?)
-                                         """;
+
+    private static final String UPDATE_WHIT_FILE
+            = """
+                    UPDATE encargado SET
+                    nombre=?,
+                    telefono=?, 
+                    direccion=?, 
+                    condicion_economica=?, 
+                    tipo_documento=?, 
+                    archivo=? 
+                    WHERE dpi=?
+              """;
+    private static final String INSERT_WITHOUT_FILE
+            = """
+              INSERT INTO encargado(
+                dpi,
+                nombre,
+                telefono,
+                direccion,
+                condicion_economica)
+              VALUES(?,?,?,?,?)
+              """;
+    private static final String UPDATE_WITHOUT_FILE
+            = """
+               UPDATE encargado SET 
+                nombre=?, 
+                telefono=?, 
+                direccion=?, 
+                condicion_economica=? 
+               WHERE dpi=?
+              """;
     private ResultSet resultSet;
     private PreparedStatement statement;
 
@@ -73,6 +95,34 @@ public class EncargadoDB {
     }
 
     /**
+     *
+     * @param encargado
+     * @return
+     */
+    public boolean updateWithFile(Encargado encargado) {
+        try {
+            statement = ConeccionDB.getConeccion().prepareStatement(UPDATE_WHIT_FILE);
+            statement.setString(1, encargado.getNombre());
+            statement.setString(2, encargado.getTelefono());
+            statement.setString(3, encargado.getDireccion());
+            statement.setString(4, encargado.getCondicionEconomica());
+            statement.setString(5, encargado.getTipoDocumento());
+
+            InputStream in = new ByteArrayInputStream(encargado.getFileBytes());
+            statement.setBlob(6, in);
+
+            statement.setString(7, encargado.getDpi());
+
+            statement.executeUpdate();
+            statement.close();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(EncargadoDB.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    /**
      * Ingresa los datos del encargado en la base de datos
      *
      * @param encargado
@@ -88,6 +138,30 @@ public class EncargadoDB {
             statement.setString(5, encargado.getCondicionEconomica());
 
             statement.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(EncargadoDB.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    /**
+     *
+     * @param encargado
+     * @return
+     */
+    public boolean updateWithoutFile(Encargado encargado) {
+        try {
+            statement = ConeccionDB.getConeccion().prepareStatement(UPDATE_WITHOUT_FILE);
+            statement.setString(1, encargado.getNombre());
+            statement.setString(2, encargado.getTelefono());
+            statement.setString(3, encargado.getDireccion());
+            statement.setString(4, encargado.getCondicionEconomica());
+
+            statement.setString(5, encargado.getDpi());
+
+            statement.executeUpdate();
+            statement.close();
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(EncargadoDB.class.getName()).log(Level.SEVERE, null, ex);

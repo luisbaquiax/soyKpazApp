@@ -30,4 +30,7 @@ public class Paciente {
     private String enfermedadCronica;
     private String terapia;
     private byte[] fileBytes;
+    private String horario;
+    private String condicion;
+    private boolean activo;
 }
