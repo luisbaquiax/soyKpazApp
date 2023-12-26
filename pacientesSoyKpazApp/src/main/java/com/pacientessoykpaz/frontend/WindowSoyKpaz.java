@@ -2131,7 +2131,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         try {
             ReportePDF reportePDF = new ReportePDF();
             Paciente paciente = null;
-            List<Paciente> list = controlDatos.getPacienteDB().getPacientes();
+            List<Paciente> list = controlDatos.getPacienteDB().getPacientes(true);
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).getCarne().equals(pacienteInfo.getCarne())) {
                     paciente = list.get(i);
@@ -2449,7 +2449,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
             if (tablePacientes.getSelectedRow() >= 0) {
                 this.pacienteInfo = listPacientes.get(tablePacientes.getSelectedRow());
                 Paciente paciente = controlDatos.getPacientePorCarne(
-                        controlDatos.getPacienteDB().getPacientes(),
+                        controlDatos.getPacienteDB().getPacientes(true),
                         pacienteInfo);
                 paciente.setActivo(false);
                 controlDatos.actualizarPaciente(paciente);

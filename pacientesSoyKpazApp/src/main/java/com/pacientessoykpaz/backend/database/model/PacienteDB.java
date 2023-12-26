@@ -79,7 +79,8 @@ public class PacienteDB {
                 activo) 
               values(?,?,?,?,?,?,?,?,?,?,?,?)
               """;
-    private static final String SELECT = "SELECT * FROM paciente";
+    private static final String SELECT_ALL = "SELECT * FROM paciente";
+    private static final String SELECT_BY_ESTADO = "SELECT * FROM paciente WHERE activo = ?";
 
     private static final String UPDATE_WHIT_OUT_FILE
             = """
@@ -225,15 +226,38 @@ public class PacienteDB {
         }
     }
 
-    public boolean update(Paciente paciente) {
-        return false;
-    }
-
+    /**
+     *
+     * @return
+     */
     public List<Paciente> getPacientes() {
         List<Paciente> list = new ArrayList<>();
 
         try {
-            statement = ConeccionDB.getConeccion().prepareStatement(SELECT);
+            statement = ConeccionDB.getConeccion().prepareStatement(SELECT_ALL);
+            resutSet = statement.executeQuery();
+            while (resutSet.next()) {
+                list.add(get(resutSet));
+            }
+            resutSet.close();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(PacienteDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    /**
+     *
+     * @param activo
+     * @return
+     */
+    public List<Paciente> getPacientes(boolean activo) {
+        List<Paciente> list = new ArrayList<>();
+
+        try {
+            statement = ConeccionDB.getConeccion().prepareStatement(SELECT_BY_ESTADO);
+            statement.setBoolean(1, activo);
             resutSet = statement.executeQuery();
             while (resutSet.next()) {
                 list.add(get(resutSet));
