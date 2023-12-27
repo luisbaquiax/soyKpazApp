@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS paciente(
     horario VARCHAR(100) NOT NULL,
     condicion VARCHAR(100) NOT NULL,
     activo BOOLEAN NOT NULL,
+    monto DOUBLE NOT NULL,
     PRIMARY KEY(carne),
     FOREIGN KEY(dpi_encargado) REFERENCES encargado(dpi)  ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(dpi_terapista) REFERENCES terapista(dpi)  ON DELETE CASCADE ON UPDATE CASCADE,
