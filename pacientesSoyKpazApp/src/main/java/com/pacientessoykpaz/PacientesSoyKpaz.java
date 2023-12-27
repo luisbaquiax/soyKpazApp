@@ -3,10 +3,7 @@
  */
 package com.pacientessoykpaz;
 
-import com.pacientessoykpaz.backend.controldata.ReportePDF;
 import com.pacientessoykpaz.frontend.WindowSoyKpaz;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -18,5 +15,6 @@ public class PacientesSoyKpaz {
         WindowSoyKpaz k = new WindowSoyKpaz();
         System.out.println(k.getWidth());
         k.setVisible(true);
+//        new CuotasWindow().setVisible(true);
     }
 }

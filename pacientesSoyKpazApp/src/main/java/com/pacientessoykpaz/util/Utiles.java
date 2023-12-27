@@ -19,22 +19,42 @@ public class Utiles {
     public static final String INGRESOS_MAYOR_1000 = "Ingresos superiores a Q 1,000";
     public static final String INGRESOS_MENOR_1000 = "Ingresos inferiores a Q 1,000";
     public static final String NO_TIENE_INGRESOS_FIJOS = "No tiene ingresos fijos";
-
+    /**
+     *
+     */
     public static final String BECARIO_100 = "100 % becado";
     public static final String BECARIO_50 = "50 % becado";
     public static final String NO_BECADO = "No becado";
-    
+    /**
+     *
+     */
+    public static final String COUTA_800 = "800";
+    public static final String CUOTA_400 = "400";
+
+    public static final String BOLETA = "BOLETA";
+    public static final String EFECTIVO = "EFECTIVO";
+
     public static final String OCUPACIONAL = "Ocupacional";
     public static final String HABLA = "Habla";
-     public static final String PSICOLOGICA = "Psicológica";
+    public static final String PSICOLOGICA = "Psicológica";
 
+    public static final String CUOTA_PENDIENTE = "PENDIENTE";
+    public static final String CUOTA_CANCELADA = "CANCELADA";
+    public static final String CUOTA_ATRASADA = "ATRASADA";
+
+    /**
+     *
+     * @param button
+     * @param ruta
+     * @param tam
+     */
     public void ponerIconoButton(JButton button, String ruta, int tam) {
         ImageIcon icono1 = new ImageIcon(getClass().getResource(ruta));
         button.setIcon(new ImageIcon(icono1.getImage().getScaledInstance(tam,
                 tam, Image.SCALE_SMOOTH)));
     }
-    
-     public void ponerIconoButton(JButton button, String ruta) {
+
+    public void ponerIconoButton(JButton button, String ruta) {
         ImageIcon icono1 = new ImageIcon(getClass().getResource(ruta));
         button.setIcon(new ImageIcon(icono1.getImage().getScaledInstance(button.getSize().width,
                 button.getSize().height, Image.SCALE_SMOOTH)));

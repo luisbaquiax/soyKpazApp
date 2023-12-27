@@ -1913,6 +1913,17 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                         dpiEncargado(txtDpiEncargado.getText()).
                         enfermedadCronica(txtEnfermedad.getText()).
                         build();
+                //establecemos la cuota del paciente
+                switch (nuevoPaciente.getTipoPrograma()) {
+                    case Utiles.BECARIO_100 ->
+                        nuevoPaciente.setMonto(0);
+                    case Utiles.BECARIO_50 ->
+                        nuevoPaciente.setMonto(Double.parseDouble(Utiles.CUOTA_400));
+                    case Utiles.NO_BECADO ->
+                        nuevoPaciente.setMonto(Double.parseDouble(Utiles.COUTA_800));
+                    default -> {
+                    }
+                }
                 //validamos si selecciono algún archivo
                 boolean pacienteConArchivo = false;
                 boolean encargadoConArchivo = false;
@@ -1940,7 +1951,6 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                     }
                 }
                 //
-
                 //verificamos si se han seleccionado las opciones necesarias
                 if (isBecario && ingresoSeleccionado && isTerapistaSelected) {
                     nuevoPaciente.setHorario(txtHorario.getText());
