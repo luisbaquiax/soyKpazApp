@@ -33,4 +33,5 @@ public class Paciente {
     private String horario;
     private String condicion;
     private boolean activo;
+    private double monto;
 }

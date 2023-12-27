@@ -39,8 +39,9 @@ public class PacienteDB {
                 horario,
                 condicion,
                 activo,
-                archivo) 
-              values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                archivo,
+                monto) 
+              values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
               """;
 
     private static final String UPDATE_WHIT_FILE
@@ -58,7 +59,8 @@ public class PacienteDB {
                 horario=?, 
                 condicion=?, 
                 activo=?, 
-                archivo=?
+                archivo=?,
+                monto=?
               WHERE carne=?
               """;
 
@@ -76,8 +78,9 @@ public class PacienteDB {
                 terapia,
                 horario,
                 condicion,
-                activo) 
-              values(?,?,?,?,?,?,?,?,?,?,?,?)
+                activo,
+                monto) 
+              values(?,?,?,?,?,?,?,?,?,?,?,?,?)
               """;
     private static final String SELECT_ALL = "SELECT * FROM paciente";
     private static final String SELECT_BY_ESTADO = "SELECT * FROM paciente WHERE activo = ?";
@@ -95,7 +98,8 @@ public class PacienteDB {
                 terapia = ?,
                 horario = ?,
                 condicion = ?,
-                activo = ?
+                activo = ?,
+                monto=?
               WHERE carne = ?
               """;
 
@@ -123,9 +127,10 @@ public class PacienteDB {
             statement.setString(11, paciente.getHorario());
             statement.setString(12, paciente.getCondicion());
             statement.setBoolean(13, paciente.isActivo());
+            statement.setDouble(14, paciente.getMonto());
 
             InputStream in = new ByteArrayInputStream(paciente.getFileBytes());
-            statement.setBlob(14, in);
+            statement.setBlob(15, in);
 
             statement.executeUpdate();
             statement.close();
@@ -155,7 +160,9 @@ public class PacienteDB {
             InputStream in = new ByteArrayInputStream(paciente.getFileBytes());
             statement.setBlob(13, in);
 
-            statement.setString(14, paciente.getCarne());
+            statement.setDouble(14, paciente.getMonto());
+
+            statement.setString(15, paciente.getCarne());
 
             statement.executeUpdate();
             statement.close();
@@ -186,6 +193,7 @@ public class PacienteDB {
             statement.setString(10, paciente.getHorario());
             statement.setString(11, paciente.getCondicion());
             statement.setBoolean(12, paciente.isActivo());
+            statement.setDouble(13, paciente.getMonto());
 
             statement.executeUpdate();
             statement.close();
@@ -216,6 +224,7 @@ public class PacienteDB {
             statement.setString(10, paciente.getCondicion());
             statement.setBoolean(11, paciente.isActivo());
             statement.setString(12, paciente.getCarne());
+            statement.setDouble(13, paciente.getMonto());
 
             statement.executeUpdate();
             statement.close();
@@ -287,6 +296,7 @@ public class PacienteDB {
                 horario(resultSet.getString("horario")).
                 condicion(resultSet.getString("condicion")).
                 activo(resultSet.getBoolean("activo")).
+                monto(resultSet.getDouble("monto")).
                 build();
         if (blob != null) {
             byte[] byteArray = blob.getBytes(1, (int) blob.length());

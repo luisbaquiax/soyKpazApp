@@ -34,6 +34,7 @@ public class ControlDatos {
     private FechaDB fechaDB;
     private PacienteInfoDB pacienteInfoDB;
     private ReporteDB reporteDB;
+    private CuotaDB cuotaDB;
 
     public ControlDatos() {
         this.condicionDB = new CondicionDB();
@@ -43,6 +44,7 @@ public class ControlDatos {
         this.fechaDB = new FechaDB();
         this.pacienteInfoDB = new PacienteInfoDB();
         this.reporteDB = new ReporteDB();
+        this.cuotaDB = new CuotaDB();
     }
 
     public String[] getCondiciones() {
@@ -91,6 +93,8 @@ public class ControlDatos {
         }
         return null;
     }
+    
+ 
 
     public void descargarDocumentos(byte[] arraysBytes, String path, String tipoArchivo) {
         FileOutputStream outPutStream = null;

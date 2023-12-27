@@ -38,8 +38,8 @@ CREATE TABLE IF NOT EXISTS paciente(
     condicion VARCHAR(100) NOT NULL,
     activo BOOLEAN NOT NULL,
     PRIMARY KEY(carne),
-    FOREIGN KEY(dpi_encargado) REFERENCES encargado(dpi),
-    FOREIGN KEY(dpi_terapista) REFERENCES terapista(dpi)
+    FOREIGN KEY(dpi_encargado) REFERENCES encargado(dpi)  ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(dpi_terapista) REFERENCES terapista(dpi)  ON DELETE CASCADE ON UPDATE CASCADE,
 );
 
 CREATE TABLE IF NOT EXISTS reporte(
@@ -49,6 +49,24 @@ CREATE TABLE IF NOT EXISTS reporte(
     reporte VARCHAR(250) NOT NULL,
     PRIMARY KEY(id)
 );
+
+CREATE TABLE IF NOT EXISTS cuota(
+    id INT NOT NULL AUTO_INCREMENT UNIQUE,
+    carne INT NOT NULL,
+    año VARCHAR(4) NOT NULL,
+    mes VARCHAR(20) NOT NULL,
+    dpi_encargado VARCHAR(15) NOT NULL,
+    fecha_limite DATE NOT NULL,
+    tipo_pago VARCHAR(20),
+    archivo LONGBLOB,
+    tipo_archivo VARCHAR(15),
+    estado VARCHAR(20) NOT NULL,
+    monto DOUBLE NOT NULL,
+    PRIMARY KEY(carne,año,mes),
+    FOREIGN KEY(dpi_encargado) REFERENCES encargado(dpi) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(carne) REFERENCES paciente(carne)
+);
+
 INSERT INTO condicion(nombre) VALUES("Autismo");
 INSERT INTO condicion(nombre) VALUES("Síndrome de Down");
 INSERT INTO condicion(nombre) VALUES("Retraso evolutivo");
