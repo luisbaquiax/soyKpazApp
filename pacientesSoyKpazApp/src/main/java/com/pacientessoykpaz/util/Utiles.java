@@ -28,8 +28,8 @@ public class Utiles {
     /**
      *
      */
-    public static final String COUTA_800 = "800";
-    public static final String CUOTA_400 = "400";
+    public static final double COUTA_800 = 800.00;
+    public static final double CUOTA_400 = 400.00;
 
     public static final String BOLETA = "BOLETA";
     public static final String EFECTIVO = "EFECTIVO";

@@ -127,10 +127,9 @@ public class PacienteDB {
             statement.setString(11, paciente.getHorario());
             statement.setString(12, paciente.getCondicion());
             statement.setBoolean(13, paciente.isActivo());
-            statement.setDouble(14, paciente.getMonto());
-
             InputStream in = new ByteArrayInputStream(paciente.getFileBytes());
-            statement.setBlob(15, in);
+            statement.setBlob(14, in);
+            statement.setDouble(15, paciente.getMonto());
 
             statement.executeUpdate();
             statement.close();
@@ -223,8 +222,9 @@ public class PacienteDB {
             statement.setString(9, paciente.getHorario());
             statement.setString(10, paciente.getCondicion());
             statement.setBoolean(11, paciente.isActivo());
-            statement.setString(12, paciente.getCarne());
-            statement.setDouble(13, paciente.getMonto());
+            statement.setDouble(12, paciente.getMonto());
+
+            statement.setString(13, paciente.getCarne());
 
             statement.executeUpdate();
             statement.close();

@@ -33,7 +33,7 @@ public class TerapistaDB {
         try {
             statement = ConeccionDB.getConeccion().prepareStatement(INSERT);
             statement.setString(1, terapista.getNombre());
-            statement.setString(2, terapista.getNombre());
+            statement.setString(2, terapista.getDpi());
             statement.executeUpdate();
             statement.close();
             return true;
