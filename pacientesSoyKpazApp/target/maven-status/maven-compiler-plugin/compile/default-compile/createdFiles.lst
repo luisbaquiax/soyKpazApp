@@ -24,6 +24,7 @@ com\pacientessoykpaz\frontend\WindowSoyKpaz$12.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$52.class
 com\pacientessoykpaz\backend\database\coneccion\ConeccionDB.class
 com\pacientessoykpaz\frontend\WinReport$3.class
+com\pacientessoykpaz\frontend\controlCuotas\CuotasPacienteWindow$1.class
 com\pacientessoykpaz\frontend\About$1.class
 com\pacientessoykpaz\frontend\controlCuotas\EditCuotaWindow$2.class
 com\pacientessoykpaz\frontend\CambioCondicion$1.class
@@ -42,6 +43,7 @@ com\pacientessoykpaz\frontend\WindowSoyKpaz$40.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$50.class
 com\pacientessoykpaz\frontend\WinReport.class
 com\pacientessoykpaz\backend\controldata\ReportePDF.class
+com\pacientessoykpaz\frontend\controlCuotas\CuotasWindow$7.class
 com\pacientessoykpaz\frontend\table\PanelAction$3.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$8.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$22.class
@@ -103,6 +105,7 @@ com\pacientessoykpaz\backend\entidad\Reporte$ReporteBuilder.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$30.class
 com\pacientessoykpaz\backend\database\model\PacienteInfoDB.class
 com\pacientessoykpaz\backend\entidad\Cuota.class
+com\pacientessoykpaz\frontend\controlCuotas\CuotasPacienteWindow.class
 com\pacientessoykpaz\backend\entidad\Terapista.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$5.class
 com\pacientessoykpaz\frontend\WindowSoyKpaz$42.class

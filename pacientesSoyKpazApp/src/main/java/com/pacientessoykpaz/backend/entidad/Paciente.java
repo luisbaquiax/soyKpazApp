@@ -34,4 +34,8 @@ public class Paciente {
     private String condicion;
     private boolean activo;
     private double monto;
+
+    public String comboFilter() {
+        return carne + ", " + nombre;
+    }
 }

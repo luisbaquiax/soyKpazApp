@@ -50,6 +50,7 @@ public class CuotasWindow extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         personalizarTabla();
+
         this.utiles = new Utiles();
         this.controlDatos = new ControlDatos();
         this.cuotasWindow = this;
@@ -58,6 +59,12 @@ public class CuotasWindow extends javax.swing.JFrame {
          */
         listcuotas = controlDatos.getCuotaDB().getList(Utiles.CUOTA_PENDIENTE);
         llenarTablaCuotas(listcuotas);
+        /**
+         * *
+         *
+         */
+        llenarComboPacientes();
+
         //establecer el icon de la app cuando se está usando
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/ong.png")));
         try {
@@ -86,9 +93,13 @@ public class CuotasWindow extends javax.swing.JFrame {
         btnCuotasAtrasadas = new rojeru_san.RSButton();
         btnCanceladas = new rojeru_san.RSButton();
         rSButton5 = new rojeru_san.RSButton();
-        jPanel2 = new javax.swing.JPanel();
+        panelTable = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableCuotas = new rojerusan.RSTableMetro();
+        jPanel1 = new javax.swing.JPanel();
+        comboPacientes = new RSMaterialComponent.RSComboBoxMaterial();
+        jLabel1 = new javax.swing.JLabel();
+        txtTotal = new rojeru_san.rsfield.RSTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -141,44 +152,85 @@ public class CuotasWindow extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Carné", "Nombre", "DPI encargado", "Encargado", "Tipo de pago", "Estado", "Monto", "Acción"
+                "Año y mes", "Carné", "Nombre", "DPI encargado", "Encargado", "Tipo de pago", "Estado", "Monto", "Acción"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, true
+                false, false, false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        tableCuotas.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         tableCuotas.setRowHeight(35);
         jScrollPane1.setViewportView(tableCuotas);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout panelTableLayout = new javax.swing.GroupLayout(panelTable);
+        panelTable.setLayout(panelTableLayout);
+        panelTableLayout.setHorizontalGroup(
+            panelTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
+        panelTableLayout.setVerticalGroup(
+            panelTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE)
+        );
+
+        comboPacientes.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtrar por paciente"));
+        comboPacientes.setFont(new java.awt.Font("Roboto Bold", 1, 12)); // NOI18N
+        comboPacientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboPacientesActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel1.setText("Filtar por paciente");
+
+        txtTotal.setEnabled(false);
+        txtTotal.setPlaceholder("Total a pagar...");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(comboPacientes, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(comboPacientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelContentLayout = new javax.swing.GroupLayout(panelContent);
         panelContent.setLayout(panelContentLayout);
         panelContentLayout.setHorizontalGroup(
             panelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelTable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelMenu1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 873, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         panelContentLayout.setVerticalGroup(
             panelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelContentLayout.createSequentialGroup()
                 .addComponent(panelMenu1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(panelTable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -197,6 +249,7 @@ public class CuotasWindow extends javax.swing.JFrame {
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         // TODO add your handling code here:
+        txtTotal.setText("");
         List<Paciente> pacientes = controlDatos.getPacienteDB().getPacientes(true);
         String añoActual = LocalDate.now().getYear() + "";
         String mesActual = LocalDate.now().getMonth().toString();
@@ -244,21 +297,38 @@ public class CuotasWindow extends javax.swing.JFrame {
 
     private void btnCuotasPendientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuotasPendientesActionPerformed
         // TODO add your handling code here:
+        txtTotal.setText("");
         listcuotas = controlDatos.getCuotaDB().getList(Utiles.CUOTA_PENDIENTE);
         llenarTablaCuotas(listcuotas);
     }//GEN-LAST:event_btnCuotasPendientesActionPerformed
 
     private void btnCuotasAtrasadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuotasAtrasadasActionPerformed
         // TODO add your handling code here:
+        txtTotal.setText("");
         listcuotas = controlDatos.getCuotaDB().getList(Utiles.CUOTA_ATRASADA);
         llenarTablaCuotas(listcuotas);
     }//GEN-LAST:event_btnCuotasAtrasadasActionPerformed
 
     private void btnCanceladasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCanceladasActionPerformed
         // TODO add your handling code here:
+        txtTotal.setText("");
         listcuotas = controlDatos.getCuotaDB().getList(Utiles.CUOTA_CANCELADA);
         llenarTablaCuotas(listcuotas);
     }//GEN-LAST:event_btnCanceladasActionPerformed
+
+    private void comboPacientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboPacientesActionPerformed
+        // TODO add your handling code here:
+        System.out.println(comboPacientes.getSelectedItem());
+        String selecteItem = comboPacientes.getSelectedItem() + "";
+        String[] data = selecteItem.split(",");
+        listcuotas = controlDatos.getCuotaDB().getList(Utiles.CUOTA_ATRASADA, data[0]);
+        double total = 0;
+        for (Cuota listcuota : listcuotas) {
+            total += listcuota.getMonto();
+        }
+        txtTotal.setText("Total a cancelar: " + total);
+        llenarTablaCuotas(listcuotas);
+    }//GEN-LAST:event_comboPacientesActionPerformed
 
     public void llenarTablaCuotas(List<Cuota> list) {
         System.out.println("hola");
@@ -270,6 +340,7 @@ public class CuotasWindow extends javax.swing.JFrame {
             Paciente p = controlDatos.getPacientePorCarne(controlDatos.getPacienteDB().getPacientes(), pi);
             Encargado e = controlDatos.getEncargadoDB().getEncargado(list.get(i).getDpiEncargado());
             String[] data = new String[]{
+                list.get(i).getAño() + "-" + list.get(i).getMes(),
                 list.get(i).getCarne(),
                 p.getNombre(),
                 list.get(i).getDpiEncargado(),
@@ -286,12 +357,16 @@ public class CuotasWindow extends javax.swing.JFrame {
     private rojeru_san.RSButton btnCuotasAtrasadas;
     private rojeru_san.RSButton btnCuotasPendientes;
     private rojeru_san.RSButton btnUpdate;
-    private javax.swing.JPanel jPanel2;
+    private RSMaterialComponent.RSComboBoxMaterial comboPacientes;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel panelContent;
     private javax.swing.JPanel panelMenu1;
+    private javax.swing.JPanel panelTable;
     private rojeru_san.RSButton rSButton5;
     private rojerusan.RSTableMetro tableCuotas;
+    private rojeru_san.rsfield.RSTextField txtTotal;
     // End of variables declaration//GEN-END:variables
 
     private void personalizarTabla() {
@@ -342,8 +417,8 @@ public class CuotasWindow extends javax.swing.JFrame {
             }
         };
 
-        tableCuotas.getColumnModel().getColumn(7).setCellRenderer(new TableActionCellRender());
-        tableCuotas.getColumnModel().getColumn(7).setCellEditor(new TableActionCellEditor(event));
+        tableCuotas.getColumnModel().getColumn(8).setCellRenderer(new TableActionCellRender());
+        tableCuotas.getColumnModel().getColumn(8).setCellEditor(new TableActionCellEditor(event));
 //        tableCuotas.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {
 //            @Override
 //            public Component getTableCellRendererComponent(JTable jtable, Object o, boolean bln, boolean bln1, int i, int i1) {
@@ -359,6 +434,13 @@ public class CuotasWindow extends javax.swing.JFrame {
 
     public void setListcuotas(List<Cuota> list) {
         this.listcuotas = list;
+    }
+
+    private void llenarComboPacientes() {
+        comboPacientes.removeAllItems();
+        for (Paciente paciente : controlDatos.getPacienteDB().getPacientes()) {
+            comboPacientes.addItem(paciente.comboFilter());
+        }
     }
 
 }

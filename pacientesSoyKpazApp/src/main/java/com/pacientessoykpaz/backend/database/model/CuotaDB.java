@@ -61,6 +61,12 @@ public class CuotaDB {
                                          WHERE 
                                          estado = ? AND año=? AND mes=? AND carne=?
                                          """;
+
+    private static final String SELECT_CARNE = """
+                                         SELECT * FROM cuota 
+                                         WHERE 
+                                         estado = ? AND carne=?
+                                         """;
     private PreparedStatement statement;
     private ResultSet resultSet;
 
@@ -188,7 +194,30 @@ public class CuotaDB {
             Logger.getLogger(CuotaDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
+    }
 
+    /**
+     * Query:<br>
+     * SELECT * FROM cuota WHERE estado = ? AND carne=?
+     *
+     * @param estado
+     * @param carne
+     * @return list of cuotas by estado_cuota and carne_paciente
+     */
+    public List<Cuota> getList(String estado, String carne) {
+        List<Cuota> list = new ArrayList<>();
+        try {
+            statement = ConeccionDB.getConeccion().prepareStatement(SELECT_CARNE);
+            statement.setString(1, estado);
+            statement.setString(2, carne);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(get(resultSet));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CuotaDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
     }
 
     private Cuota get(ResultSet resultSet) throws SQLException {

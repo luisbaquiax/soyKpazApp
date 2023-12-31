@@ -41,13 +41,12 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
-import lombok.Data;
 
 /**
  *
  * @author Luis
  */
-public class WindowSoyKpaz extends javax.swing.JFrame {
+public final class WindowSoyKpaz extends javax.swing.JFrame {
 
     private Utiles utiles;
     private ControlDatos controlDatos;
@@ -55,6 +54,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     private ButtonGroup group1;
     private ButtonGroup group2;
     private ButtonGroup group3;
+    private ButtonGroup group4;
     private List<PacienteInfo> listPacientes;
     private DefaultTableModel dfModel;
     private ManejoRutas rutas;
@@ -95,6 +95,11 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         group3.add(radio100cambiar);
         group3.add(radio50cambiar);
         group3.add(radioNoBecadoCambiar);
+
+        group4 = new ButtonGroup();
+        group4.add(radioIngresosMayores1000);
+        group4.add(radioIngresosMenor1000);
+        group4.add(radioIngresosNofijos);
 
         this.listPacientes = this.controlDatos.getPacienteInfoDB().getPacientes(true);
 
@@ -1918,9 +1923,9 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                     case Utiles.BECARIO_100 ->
                         nuevoPaciente.setMonto(0);
                     case Utiles.BECARIO_50 ->
-                        nuevoPaciente.setMonto(Double.parseDouble(Utiles.CUOTA_400));
+                        nuevoPaciente.setMonto(Utiles.CUOTA_400);
                     case Utiles.NO_BECADO ->
-                        nuevoPaciente.setMonto(Double.parseDouble(Utiles.COUTA_800));
+                        nuevoPaciente.setMonto(Utiles.COUTA_800);
                     default -> {
                     }
                 }
@@ -1972,6 +1977,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                         }
                         agregarPaciente(pacienteConArchivo, nuevoPaciente);
                     }
+                    limpiarCamposNuevoPaciente();
                 } else {
                     JOptionPane.showMessageDialog(null,
                             "Debe seleccionar el tipo de programa, la terapia y el rango de ingresos del encargado",
@@ -1979,7 +1985,6 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                             JOptionPane.INFORMATION_MESSAGE);
                 }
                 listPacientes = controlDatos.getPacienteInfoDB().getPacientes(true);
-                limpiarCamposNuevoPaciente();
             }
         }
         llenarCondiciones(listCondiciones);
@@ -2058,13 +2063,9 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
         // TODO add your handling code here:
         Terapista t = Terapista.builder().nombre(txtNombreTerapista.getText()).dpi(txtdpiTerapista.getText()).build();
         if (controlDatos.getTerapistaDB().insert(t)) {
-            JOptionPane.showMessageDialog(null,
-                    "Se guardó correctamente los datos.",
-                    "DATOS GUARDADOS.", JOptionPane.INFORMATION_MESSAGE);
+            controlDatos.mensajeOk();
         } else {
-            JOptionPane.showMessageDialog(null,
-                    "No pudimos guardar correctamente los datos.",
-                    "DATOS NO GUARDADOS.", JOptionPane.INFORMATION_MESSAGE);
+            controlDatos.mensajeNoOk();
         }
         llenarTablaTerapistas(controlDatos.getTerapistaDB().getTerapistas());
     }//GEN-LAST:event_btnSaveTerapistaActionPerformed
@@ -2400,7 +2401,8 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                     || txtAge2.getText().isBlank()
                     || condiconEconomica.equals("")
                     || tipoPrograma.equals("")
-                    || terapia.equals("")) {
+                    || terapia.equals("")
+                    || txtHorarioCambio.getText().isBlank()) {
                 JOptionPane.showMessageDialog(null,
                         "Debe llenar los campos obligatorios.",
                         "CAMPOS OBLIGATORIOS",
@@ -2422,7 +2424,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
                 pacienteCambio.setEdad(Integer.parseInt(txtAge2.getText()));
                 //se actualiza en la base de datos
                 System.out.println(encargadoAuxi.toString());
-                System.out.println(pacienteCambio.toString());
+                System.out.println("PACIENTE_CAMBIANDO " + pacienteCambio.toString());
                 if (controlDatos.actualizarEncargado(encargadoAuxi)
                         && controlDatos.actualizarPaciente(pacienteCambio)) {
                     controlDatos.mensajeOk();
@@ -2799,6 +2801,7 @@ public class WindowSoyKpaz extends javax.swing.JFrame {
     }
 
     private void llenarComboTerapista(JComboBox comboTerapistas) {
+        comboTerapistas.removeAllItems();
         for (Terapista t : controlDatos.getTerapistaDB().getTerapistas()) {
             comboTerapistas.addItem(t.toString());
         }
